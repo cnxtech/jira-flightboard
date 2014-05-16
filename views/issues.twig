@@ -1,0 +1,36 @@
+<div class="header-info">
+    <div class="total">
+{% set total = 0 %}
+{% for type,issueList in issues %}
+    {% set total = total + issueList|length %}
+{% endfor %}
+        {{ total }}
+    </div>
+    <div class="teams">
+{% for team,count in teams %}
+        &nbsp;{{ team }}: {{ count }}&nbsp;
+{% endfor %}
+    </div>
+</div>
+
+<table cellspacing="0" cellpadding="0">
+    <colgroup>
+        <col width="15%">
+        <col width=55%">
+        <col width="15%">
+        <col width="15%">
+    </colgroup>
+{% for type,issueList in issues %}
+    <tr>
+        <td class="header" colspan="4">{{ type }}</td>
+    </tr>
+    {% for issue in issueList %}
+    <tr>
+        <td class="smell smell-{{ issue.smell }}">{{ issue.since }}</td>
+        <td>{{ issue.summary }}</td>
+        <td>{{ issue.assignee }}</td>
+        <td>{{ issue.linked }}</td>
+    </tr>
+    {% endfor %}
+{% endfor %}
+</table>

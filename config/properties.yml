@@ -1,0 +1,14 @@
+filters:
+  project: "Incident Management"
+  priorities:
+    - Blocker
+    - Critical
+    - Major
+
+smell_levels:
+#  1: 3600 # 1 hour
+#  2: 18000 # 5 hours
+#  3: 86400 # 1 day
+#  1: 3628800 # 1 hour
+  1: 3888000 # 5 hours
+  2: 7344000 # 1 day

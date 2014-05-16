@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ rootPoint }}/web/css/issues.css" />
+    </head>
+    <body>
+        <div id="error" class="alert">Couldn't get issues from Jira.</div>
+        <div id="issues-placeholder"></div>
+
+        <script>
+            var rootPoint = "{{ rootPoint }}";
+        </script>
+        <script type="text/javascript" src="{{ rootPoint }}/web/js/libs/jquery.min.js"></script>
+        <script type="text/javascript" src="{{ rootPoint }}/web/js/issues.js"></script>
+    </body>
+</html>

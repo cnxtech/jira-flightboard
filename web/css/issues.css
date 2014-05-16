@@ -1,0 +1,53 @@
+body {
+    color: white;
+    background-color: black;
+    font-family: "Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.alert {
+    padding: 10px 35px 10px 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    color: #b94a48;
+    background-color: #f2dede;
+    border-color: #eed3d7;
+    font-weight: bold;
+    display: none;
+}
+
+/* Header */
+.header-info {
+    text-align: center;
+}
+.total {
+    font-size: 100px;
+}
+.teams {
+    font-size: 35px;
+}
+
+/*Issues table*/
+table {
+    width: 100%;
+}
+td {
+    border-bottom: solid 1px darkgrey;
+    font-size: 26px;
+    padding: 5px;
+}
+.header {
+    background-color: #3c3c3c;
+    color: #ffffff;
+}
+.smell {
+    text-align: center;
+}
+.smell-3 {
+    background-color: #d9534f;
+}
+.smell-2 {
+    background-color: #f0ad4e;
+}
+.smell-1 {
+    background-color: #5cb85c;
+}
