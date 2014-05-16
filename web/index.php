@@ -31,13 +31,13 @@ $rawIssues = $app['IncidentDashboard\Daos\Issues'] = $app->share(
 );
 
 $controllerFactory = $app['controllers_factory'];
-$app->get(
+$controllerFactory->get(
     '',
     function (Application $app) {
         return $app['twig']->render('home.twig');
     }
 );
-$app->get(
+$controllerFactory->get(
     'issues',
     '\IncidentDashboard\Controllers\IssuesController::getSevereIncidents'
 );
