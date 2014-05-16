@@ -44,6 +44,7 @@ class IssuesController
             $priority = $issue['fields']['priority']['name'];
 
             $newIssue = array(
+                'key' => $issue['key'],
                 'summary' => $issue['fields']['summary'],
                 'since' => DataFormatter::getAge($issue['fields']['created']),
                 'smell' => DataFormatter::getSmellLevel(
@@ -51,8 +52,7 @@ class IssuesController
                         $app['config']['smell_levels']
                     ),
                 'linked' => array(),
-                'assignee' => $issue['fields']['assignee']['displayName'],
-                'linked' => array('IMT' => true, 'IOS' => true)
+                'assignee' => $issue['fields']['assignee']['displayName']
             );
 
             foreach ($issue['fields']['issuelinks'] as $linkedIssue) {
@@ -73,14 +73,6 @@ class IssuesController
 
             $issues[$priority][] = $newIssue;
         }
-        //@todo: remove hack
-        $issues['Critical'] = array_slice($issues['Major'], 40, 5);
-        $issues['Blocker'] = array_slice($issues['Major'], 45, 3);
-        $a = $issues['Major'];
-        unset($issues['Major']);
-        $issues['Major'] = array_slice($a, 12, 10);
-        $teams = array('SE' => 12, 'IMT' => 13, 'IOS' => 2);
-        //@end-todo
 
         return $app['twig']->render(
             'issues.twig',

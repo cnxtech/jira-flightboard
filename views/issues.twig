@@ -27,7 +27,7 @@
     {% for issue in issueList %}
     <tr>
         <td class="smell smell-{{ issue.smell }}">{{ issue.since }}</td>
-        <td>{{ issue.summary }}</td>
+        <td>{{ issue.key }} - {{ issue.summary }}</td>
         <td>{{ issue.assignee }}</td>
         <td>{{ issue.linked }}</td>
     </tr>
