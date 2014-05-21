@@ -21,9 +21,11 @@
         <col width="15%">
     </colgroup>
 {% for type,issueList in issues %}
+    {% if not issueList is empty %}
     <tr>
         <td class="header" colspan="4">{{ type }}</td>
     </tr>
+    {% endif %}
     {% for issue in issueList %}
     <tr>
         <td class="smell smell-{{ issue.smell }}">{{ issue.since }}</td>
