@@ -4,10 +4,6 @@
 {% endfor %}
 
 <div class="header-info">
-    <div>
-        <div class="title">IMT-JIRA Dashboard</div>
-        <div class="total">{{ total }} total tickets</div>
-    </div>
     <div class="teams">
 {% for smell,teamsInSmell in teams %}
     {% for count, teamList in teamsInSmell %}
@@ -22,7 +18,7 @@
 <table cellspacing="0" cellpadding="0">
     <colgroup>
         <col width="8%">
-        <col width="14%">
+        <col width="15%">
         <col width=47%">
         <col width="15%">
         <col width="15%">
@@ -38,7 +34,7 @@
     <tr class="back-smell-{{ backsmell }}">
         <td>{{ issue.key }}</td>
         <td><div class="time smell-{{ issue.smell }}">{{ issue.since }}</div></td>
-        <td>{{ issue.summary }}</td>
+        <td><div class="summary">{{ issue.summary }}</div></td>
         <td class="assignee">{{ issue.assignee }}</td>
         <td>{{ issue.linked }}</td>
     </tr>
