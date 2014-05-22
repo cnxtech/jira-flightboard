@@ -23,7 +23,7 @@ class IssuesRestApiDao extends RestApiDao implements IssuesDao
     {
         $priorities = implode(',', $priorities);
         $query = sprintf(
-            '?jql=project="%s" and priority in(%s)&maxResults=-1',
+            '?jql=project="%s" and priority in(%s) and status="Open"&maxResults=-1',
             $project,
             $priorities
         );

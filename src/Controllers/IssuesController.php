@@ -43,14 +43,15 @@ class IssuesController
         foreach ($rawIssues['issues'] as $issue) {
             $priority = $issue['fields']['priority']['name'];
 
+            $smell = DataFormatter::getSmellLevel(
+                $issue['fields']['created'],
+                $app['config']['smell_levels']
+            );
             $newIssue = array(
                 'key' => $issue['key'],
                 'summary' => $issue['fields']['summary'],
                 'since' => DataFormatter::getAge($issue['fields']['created']),
-                'smell' => DataFormatter::getSmellLevel(
-                        $issue['fields']['created'],
-                        $app['config']['smell_levels']
-                    ),
+                'smell' => $smell,
                 'linked' => array(),
                 'assignee' => $issue['fields']['assignee']['displayName']
             );
@@ -63,10 +64,14 @@ class IssuesController
                 if (!in_array($status, array('Resolved'))) {
                     $jiraKey = explode('-', $linkedIssue['inwardIssue']['key']);
                     $newIssue['linked'][$jiraKey[0]] = true;
+
                     if (!isset($teams[$jiraKey[0]])) {
-                        $teams[$jiraKey[0]] = 0;
+                        $teams[$jiraKey[0]] = array('smell' => 0, 'count' => 0);
                     }
-                    $teams[$jiraKey[0]]++;
+                    $teams[$jiraKey[0]]['count']++;
+                    $teams[$jiraKey[0]]['smell'] = $teams[$jiraKey[0]]['smell'] < $smell
+                        ? $smell
+                        : $teams[$jiraKey[0]]['smell'];
                 }
             }
             $newIssue['linked'] = implode(', ', array_keys($newIssue['linked']));
@@ -74,9 +79,24 @@ class IssuesController
             $issues[$priority][] = $newIssue;
         }
 
+        $orderedTeams = array();
+        foreach ($teams as $team => $info) {
+            if (!isset($orderedTeams[$info['smell']])) {
+                $orderedTeams[$info['smell']] = array();
+            }
+            if (!isset($orderedTeams[$info['smell']][$info['count']])) {
+                $orderedTeams[$info['smell']][$info['count']] = array();
+            }
+            $orderedTeams[$info['smell']][$info['count']][] = $team;
+        }
+
+        krsort($orderedTeams);
+        foreach (array_keys($orderedTeams) as $key) {
+            krsort($orderedTeams[$key]);
+        }
         return $app['twig']->render(
             'issues.twig',
-            array('issues' => $issues, 'teams' => $teams)
+            array('issues' => $issues, 'teams' => $orderedTeams)
         );
     }
 } 

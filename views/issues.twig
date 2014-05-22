@@ -1,36 +1,45 @@
-<div class="header-info">
-    <div class="total">
 {% set total = 0 %}
 {% for type,issueList in issues %}
     {% set total = total + issueList|length %}
 {% endfor %}
-        {{ total }}
+
+<div class="header-info">
+    <div>
+        <div class="title">IMT-JIRA Dashboard</div>
+        <div class="total">{{ total }} total tickets</div>
     </div>
     <div class="teams">
-{% for team,count in teams %}
-        &nbsp;{{ team }}: {{ count }}&nbsp;
+{% for smell,teamsInSmell in teams %}
+    {% for count, teamList in teamsInSmell %}
+        {% for team in teamList %}
+        <div class="smell-{{ smell }}">{{ team }}: {{ count }}</div>
+        {% endfor %}
+    {% endfor %}
 {% endfor %}
     </div>
 </div>
 
 <table cellspacing="0" cellpadding="0">
     <colgroup>
-        <col width="15%">
-        <col width=55%">
+        <col width="8%">
+        <col width="14%">
+        <col width=47%">
         <col width="15%">
         <col width="15%">
     </colgroup>
 {% for type,issueList in issues %}
     {% if not issueList is empty %}
     <tr>
-        <td class="header" colspan="4">{{ type }}</td>
+        {% set backsmell = issueList[issueList|length-1].smell %}
+        <td class="header" colspan="5"><div>{{ type }}</div><div class="total smell-{{ backsmell }}">{{ issueList|length }} total tickets</div></td>
     </tr>
     {% endif %}
     {% for issue in issueList %}
-    <tr>
-        <td class="smell smell-{{ issue.smell }}">{{ issue.since }}</td>
-        <td>{{ issue.key }} - {{ issue.summary }}</td>
-        <td>{{ issue.assignee }}</td>
+    <tr class="back-smell-{{ backsmell }}">
+        <td>{{ issue.key }}</td>
+        <td><div class="time smell-{{ issue.smell }}">{{ issue.since }}</div></td>
+        <td>{{ issue.summary }}</td>
+        <td class="assignee">{{ issue.assignee }}</td>
         <td>{{ issue.linked }}</td>
     </tr>
     {% endfor %}

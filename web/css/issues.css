@@ -1,7 +1,8 @@
 body {
-    color: white;
-    background-color: black;
-    font-family: "Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    background-color: #565556;
+    font-family: sans-serif;
+    margin: 0px;
+    padding: 0px;
 }
 
 .alert {
@@ -17,37 +18,81 @@ body {
 
 /* Header */
 .header-info {
-    text-align: center;
+    background-color: #202020;
+    padding: 15px 25px;
 }
-.total {
-    font-size: 100px;
+.header-info .title {
+    color: #c8c8c9;
+    font-size: 20px;
+    margin-bottom: 18px;
 }
-.teams {
-    font-size: 35px;
+.header-info .total {
+    color: #c8c8c9;
+    float: right;
+    font-size: 20px;
+    margin-top: -40px;
+}
+.header-info .teams {
+    margin-left: -7px;
+}
+.header-info .teams div {
+    font-size: 13px;
+    color: #f2eaeb;
+    padding: 2px 10px;
+    display: inline;
+    margin-right: 6px;
+}
+.smell-3 {
+    background-color: #9a3234;
+}
+.smell-2 {
+    background-color: #ed9621;
+}
+.smell-1 {
+    background-color: #75b443;
+}
+.back-smell-3 {
+    background-color: #69393a;
+}
+.back-smell-2 {
+    background-color: #957021;
+}
+.back-smell-1 {
+    background-color: #324f31;
 }
 
 /*Issues table*/
 table {
-    width: 100%;
+    margin: 10px 20px;
+    width: 97%;
 }
 td {
-    border-bottom: solid 1px darkgrey;
-    font-size: 26px;
-    padding: 5px;
+    font-size: 15px;
+    color: #d5d5d5;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-left: 10px;
 }
-.header {
-    background-color: #3c3c3c;
-    color: #ffffff;
+table .header {
+    background-color: #383938;
+    color: #c9c8ca;
+    padding: 10px;
 }
-.smell {
-    text-align: center;
+table .header .total {
+    color: #d5d5d5;
+    padding: 3px 10px;
+    margin-top: -18px;
+    float: right;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
-.smell-3 {
-    background-color: #d9534f;
+table .assignee {
+    color: #312020;
 }
-.smell-2 {
-    background-color: #f0ad4e;
-}
-.smell-1 {
-    background-color: #5cb85c;
+table .time {
+    width: 65%;
+    padding: 8px;
+    border: 1px solid black;
+    margin-right: 10px;
 }
