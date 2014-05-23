@@ -1,6 +1,6 @@
 body {
     background-color: black;
-    font-family: sans-serif;
+    font-family: "Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;;
     margin: 0px;
     padding: 0px;
 }
@@ -25,29 +25,29 @@ body {
 }
 .header-info .teams div {
     font-size: 19px;
-    color: #f2eaeb;
+    color: #ffffff;
     padding: 2px 10px;
     display: inline;
     margin-right: 6px;
 }
 
 .smell-3 {
-    background-color: #9a3234;
+    background-color: #cc0000;
 }
 .smell-2 {
     background-color: #ed9621;
 }
 .smell-1 {
-    background-color: #75b443;
+    background-color: #77b300;
 }
 .back-smell-3 {
-    background-color: #69393a;
+    background-color: #4c0000;
 }
 .back-smell-2 {
     background-color: #957021;
 }
 .back-smell-1 {
-    background-color: #324f31;
+    background-color: #2d4200;
 }
 
 /*Issues table*/
@@ -57,18 +57,18 @@ table {
 }
 td {
     font-size: 19px;
-    color: #d5d5d5;
+    color: #ffffff;
     padding-top: 7px;
     padding-bottom: 7px;
     padding-left: 10px;
 }
 table .header {
     background-color: #383938;
-    color: #c9c8ca;
+    color: #ffffff;
     padding: 10px;
 }
 table .header .total {
-    color: #d5d5d5;
+    color: #ffffff;
     padding: 3px 10px;
     margin-top: -18px;
     float: right;
@@ -81,6 +81,8 @@ table .time {
     padding: 8px;
     border: 1px solid black;
     margin-right: 10px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
 }
 table .summary {
     margin-right: 10px;
