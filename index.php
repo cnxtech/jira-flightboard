@@ -21,13 +21,4 @@ $app->register(
 );
 $app['twig']->addGlobal('rootPoint', $app['config']['root_point']);
 
-$controllerFactory = $app['controllers_factory'];
-$controllerFactory->get(
-    '',
-    function (Application $app) {
-        return $app['twig']->render('home.twig');
-    }
-);
-$app->mount($app['config']['root_point'], $controllerFactory);
-
-$app->run();
+echo $app['twig']->render('home.twig');

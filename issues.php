@@ -30,11 +30,5 @@ $rawIssues = $app['IncidentDashboard\Daos\Issues'] = $app->share(
     }
 );
 
-$controllerFactory = $app['controllers_factory'];
-$controllerFactory->get(
-    'issues',
-    '\IncidentDashboard\Controllers\IssuesController::getSevereIncidents'
-);
-$app->mount($app['config']['root_point'], $controllerFactory);
-
-$app->run();
+$controller = new IncidentDashboard\Controllers\IssuesController();
+echo $controller->getSevereIncidents($app);
