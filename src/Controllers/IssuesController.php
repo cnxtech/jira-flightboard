@@ -94,8 +94,9 @@ class IssuesController
         foreach (array_keys($orderedTeams) as $key) {
             krsort($orderedTeams[$key]);
         }
+        $template = isset($_GET['mobile']) && $_GET['mobile'] == 'true' ? 'issues-mobile.twig' : 'issues.twig';
         return $app['twig']->render(
-            'issues.twig',
+            $template,
             array('issues' => $issues, 'teams' => $orderedTeams)
         );
     }

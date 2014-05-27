@@ -10,7 +10,8 @@ $().ready(function () {
 });
 
 function pullIssues() {
-    $.ajax(rootPoint + "/issues")
+    var mobileView = $(window).width() < 500;
+    $.ajax(rootPoint + "/issues?mobile=" + mobileView)
         .done(function(response) {
             $("#error").hide();
             $("#issues-placeholder").html(response);

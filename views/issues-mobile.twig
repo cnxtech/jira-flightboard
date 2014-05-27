@@ -3,6 +3,7 @@
     {% set total = total + issueList|length %}
 {% endfor %}
 
+<div class="mobile">
 <div class="header-info">
     <div class="teams">
 {% for smell,teamsInSmell in teams %}
@@ -17,11 +18,8 @@
 
 <table cellspacing="0" cellpadding="0">
     <colgroup>
-        <col width="10%">
-        <col width="18%">
-        <col width=47%">
-        <col width="15%">
-        <col width="15%">
+        <col width="69%">
+        <col width="31%">
     </colgroup>
 {% for type,issueList in issues %}
     {% if not issueList is empty %}
@@ -32,12 +30,10 @@
     {% endif %}
     {% for issue in issueList %}
     <tr class="back-smell-{{ backsmell }}">
-        <td>{{ issue.key }}</td>
-        <td><div class="time smell-{{ issue.smell }}">{{ issue.since }}</div></td>
         <td><div class="summary">{{ issue.summary }}</div></td>
-        <td class="assignee">{{ issue.assignee }}</td>
-        <td>{{ issue.linked }}</td>
+        <td><div class="time smell-{{ issue.smell }}">{{ issue.since }}</div></td>
     </tr>
     {% endfor %}
 {% endfor %}
 </table>
+</div>
