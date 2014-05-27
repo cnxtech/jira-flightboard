@@ -88,16 +88,23 @@ table .summary {
     margin-right: 10px;
 }
 
+.mobile table {
+    font-size: 16px;
+    margin: 10px 5%;
+    width: 90%;
+}
+
 .mobile td div {
     font-size: 16px;
 }
 
 .mobile table .time {
-    font-size: 15px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: normal;
     width: 83%;
-    padding: 4px;
+    padding: 3px;
     border: 1px solid black;
-    margin-right: 10px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
 }
