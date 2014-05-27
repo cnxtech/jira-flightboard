@@ -11,7 +11,7 @@ $().ready(function () {
 
 function pullIssues() {
     var mobileView = $(window).width() < 500;
-    $.ajax(rootPoint + "/issues?mobile=" + mobileView)
+    $.ajax(rootPoint + "/issues.js?mobile=" + mobileView)
         .done(function(response) {
             $("#error").hide();
             $("#issues-placeholder").html(response);
