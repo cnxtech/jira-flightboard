@@ -19,7 +19,7 @@
         <td class="header" colspan="5"><div>{{ priority }}</div><div class="total smell-{{ generalSmell }}">{{ issueList.length }} total tickets</div></td>
     </tr>
     {{ #issueList }}
-    <tr class="back-smell-{{ generalSmell }}">
+    <tr class="bg-{{ priority }}">
         <td>{{ key }}</td>
         <td><div class="time smell-{{ smell }}">{{ since }}</div></td>
         <td><div class="summary">{{ summary }}</div></td>

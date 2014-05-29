@@ -40,13 +40,13 @@ body {
 .smell-1 {
     background-color: #77b300;
 }
-.back-smell-3 {
+.bg-Critical {
     background-color: #4c0000;
 }
-.back-smell-2 {
+.bg-Major {
     background-color: #5f3300;
 }
-.back-smell-1 {
+.bg-Minor {
     background-color: #2d4200;
 }
 

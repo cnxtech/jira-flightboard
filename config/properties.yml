@@ -7,9 +7,9 @@ epics:
 incidents:
   project: "Incident Management"
   priorities:
-    - Blocker
     - Critical
     - Major
+    - Minor
 
 smell_levels:
   1: 3600 # 1 hour
