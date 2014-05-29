@@ -19,7 +19,7 @@
             {% if not interval is defined %}
                 {% set interval = 5000 %}
             {% endif %}
-            load("{{ dataEndpoint }}", "{{ templateName }}", {{ interval }});
+            load("{{ type }}", {{ interval }});
         </script>
         {% block js %}
         {% endblock %}
