@@ -1,4 +1,10 @@
-filters:
+epics:
+  project: "Shazam Road Map"
+  status:
+    - "In Progress"
+    - "Closed"
+
+incidents:
   project: "Incident Management"
   priorities:
     - Blocker

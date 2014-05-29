@@ -1,16 +1,16 @@
 <?php
 
 /**
- * @package IncidentDashboard\Daos
+ * @package JiraDashboard\Daos
  * @author toni <toni.lopez@shazam.com>
  */
 
-namespace IncidentDashboard\Daos;
+namespace JiraDashboard\Daos;
 
 /**
  * DAO for issues.
  *
- * @package IncidentDashboard\Daos
+ * @package JiraDashboard\Daos
  */
 
 interface IssuesDao
@@ -21,5 +21,13 @@ interface IssuesDao
      * @return array
      * @throws \Exception
      */
-    public function get($project, array $priorities);
-} 
+    public function getByPriority($project, array $priorities);
+
+    /**
+     * @param string $project
+     * @param array $status
+     * @return array
+     * @throws \Exception
+     */
+    public function getByStatus($project, array $status);
+}

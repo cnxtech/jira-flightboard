@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @package IncidentDashboard\Daos
+ * @package JiraDashboard\Daos
  * @author toni <toni.lopez@shazam.com>
  */
 
-namespace IncidentDashboard\Daos;
+namespace JiraDashboard\Daos;
 
 /**
- * @package IncidentDashboard\Daos
+ * @package JiraDashboard\Daos
  */
 
 abstract class RestApiDao
