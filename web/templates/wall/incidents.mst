@@ -1,0 +1,31 @@
+<div class="header-info">
+    <div class="teams">
+{{ #teams }}
+        <div class="smell-{{ smell }}">{{ name }}: {{ count }}</div>
+{{ /teams }}
+    </div>
+</div>
+
+<table cellspacing="0" cellpadding="0">
+    <colgroup>
+        <col width="10%">
+        <col width="18%">
+        <col width=47%">
+        <col width="15%">
+        <col width="15%">
+    </colgroup>
+{{ #issues }}
+    <tr>
+        <td class="header" colspan="5"><div>{{ priority }}</div><div class="total smell-{{ generalSmell }}">{{ issueList.length }} total tickets</div></td>
+    </tr>
+    {{ #issueList }}
+    <tr class="back-smell-{{ generalSmell }}">
+        <td>{{ key }}</td>
+        <td><div class="time smell-{{ smell }}">{{ since }}</div></td>
+        <td><div class="summary">{{ summary }}</div></td>
+        <td class="assignee">{{ assignee }}</td>
+        <td>{{ linked }}</td>
+    </tr>
+    {{ /issueList }}
+{{ /issues }}
+</table>
