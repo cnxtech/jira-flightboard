@@ -51,7 +51,7 @@ class EpicsController
 
             $status = $issue['fields']['status']['name'];
             $sched = in_array($status, array('In Progress', 'Closed')) ? date('F') : $status;
-            $icon = $app['config']['avatars']['endpoint'] . $app['config']['teams'][$component]['id'];
+            $icon = $app['config']['teams'][$component]['id'] . '.png';
 
             switch($status) {
                 case "In Progress":

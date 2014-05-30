@@ -14,7 +14,7 @@
     </tr>
 {{ #issues }}
     <tr>
-        <td class="image"><img src="{{ icon }}"/></td>
+        <td class="image"><img src="./web/img/{{ icon }}"/></td>
         <td class="key">{{ key }}</td>
         <td><div class="summary">{{ summary }}</div></td>
         <td>{{ sched }}</td>
