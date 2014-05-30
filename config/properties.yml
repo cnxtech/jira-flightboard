@@ -14,3 +14,59 @@ incidents:
 smell_levels:
   1: 3600 # 1 hour
   2: 86400 # 1 day
+
+avatars:
+  endpoint: https://jira.shazamteam.net/secure/projectavatar?pid=
+
+teams:
+  Recognition Infrastructure:
+    key: RIN
+    id: 10951
+  Recognition Algorithm:
+    key: RIN
+    id: 10951
+  Shazam Connect:
+    key: SOC
+    id: 10242
+  iOS Team:
+    key: SIO
+    id: 10150
+  Android Team:
+    key: SOA
+    id: 10201
+  Data Team:
+    key: DEN
+    id: 10241
+  Web Team:
+    key: WPS
+    id: 10032
+  Server Team:
+    key: AMP
+    id: 10054
+  Ingestion Team:
+    key: DMT
+    id: 10063
+  IT Ops:
+    key: OPS
+    id: 10070
+  Infrastructure Ops:
+    key: OPS
+    id: 10070
+  DBA Team:
+    key: OPS
+    id: 10070
+  SE - YellowTeam:
+    key: SE
+    id: 11352
+  SE - GreenTeam:
+    key: SE
+    id: 11352
+  Infra Tools:
+    key: ITL
+    id: 10211
+  Experiences Services:
+    key: TVT
+    id: 10051
+  Experiences Team:
+    key: TVT
+    id: 10051

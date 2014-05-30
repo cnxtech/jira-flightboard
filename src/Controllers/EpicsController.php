@@ -45,48 +45,63 @@ class EpicsController
         $issues = array();
 
         foreach ($rawIssues['issues'] as $issue) {
-            $teams = array();
-            foreach ($issue['fields']['issuelinks'] as $linkedIssue) {
-                if (!isset($linkedIssue['inwardIssue'])) {
-                    continue;
-                }
-                $jiraKey = explode('-', $linkedIssue['inwardIssue']['key']);
-                if (!isset($teams[$jiraKey[0]])) {
-                    $teams[$jiraKey[0]] = 0;
-                }
-                $teams[$jiraKey[0]]++;
-            }
-            arsort($teams);
-            reset($teams);
-            $firstTeam = key($teams);
-
+            $component = $issue['fields']['components'][0]['name'];
             $keyParts = explode('-', $issue['key']);
+            $team = $app['config']['teams'][$component]['key'];
 
-            $team = empty($firstTeam) ? $keyParts[0] : $firstTeam;
             $status = $issue['fields']['status']['name'];
             $sched = in_array($status, array('In Progress', 'Closed')) ? date('F') : $status;
+            $icon = $app['config']['avatars']['endpoint'] . $app['config']['teams'][$component]['id'];
 
             switch($status) {
                 case "In Progress":
-                    $since = DateFormatter::getAge($issue['fields']['created']);
-                    $statusToShow = "In flight - $since";
+                    $statusToShow = "In flight";
+
+                    $changeLog = $dao->getChangeLog($issue['id']);
+                    foreach ($changeLog as $action) {
+                        if ($action['items'][0]['toString'] === 'In Progress') {
+                            $since = DateFormatter::getAge($action['created']);
+                            $order = strtotime($action['created']);
+                            $statusToShow .= ' - ' . $since;
+                            break;
+                        }
+                    }
                     break;
                 case "Closed":
                     $statusToShow = 'Landed';
+                    $order = time();
                     break;
                 default:
+                    $order = 0;
                     $statusToShow = '';
                     break;
             }
 
-            $issues[] = array(
+            if (!isset($issues[$sched])) {
+                $issues[$sched] = array();
+            }
+            if (!isset($issues[$sched][$order])) {
+                $issues[$sched][$order] = array();
+            }
+
+            $issues[strtotime($sched)][$order][] = array(
                 'key' => $team . '-' . $keyParts[1],
                 'summary' => $issue['fields']['summary'],
                 'sched' => $sched,
-                'status' => $statusToShow
+                'status' => $statusToShow,
+                'icon' => $icon
             );
         }
+        ksort($issues);
 
-        return json_encode(array('issues' => $issues));
+        $formattedIssues = array();
+        foreach ($issues as $issuesMonth) {
+            ksort($issuesMonth);
+            foreach ($issuesMonth as $issueList) {
+                $formattedIssues = array_merge($formattedIssues, $issueList);
+            }
+        }
+
+        return json_encode(array('issues' => $formattedIssues));
     }
 }

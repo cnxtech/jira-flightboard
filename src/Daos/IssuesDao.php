@@ -30,4 +30,16 @@ interface IssuesDao
      * @throws \Exception
      */
     public function getByStatus($project, array $status);
+
+    /**
+     * @param string $projectKey
+     * @return int
+     */
+    public function getProjectId($projectKey);
+
+    /**
+     * @param int $issueId
+     * @return array
+     */
+    public function getChangeLog($issueId);
 }

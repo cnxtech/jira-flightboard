@@ -1,15 +1,21 @@
 <table cellspacing="0" cellpadding="0">
     <colgroup>
-        <col width="10%">
-        <col width="15%">
-        <col width=45%">
-        <col width="10%">
-        <col width="20%">
+        <col width="4%">
+        <col width="11%">
+        <col width=55%">
+        <col width="11%">
+        <col width="23%">
     </colgroup>
+    <tr class="header">
+        <td class="flight" colspan="2">Flight</td>
+        <td>Destination</td>
+        <td>Sched</td>
+        <td>Status</td>
+    </tr>
 {{ #issues }}
-    <tr class="back-smell-{{ generalSmell }}">
-        <td>icon</td>
-        <td>{{ key }}</td>
+    <tr>
+        <td class="image"><img src="{{ icon }}"/></td>
+        <td class="key">{{ key }}</td>
         <td><div class="summary">{{ summary }}</div></td>
         <td>{{ sched }}</td>
         <td>{{ status }}</td>
