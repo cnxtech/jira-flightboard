@@ -53,6 +53,7 @@ class EpicsController
             $sched = in_array($status, array('In Progress', 'Closed')) ? date('F') : $status;
             $icon = $app['config']['teams'][$component]['id'] . '.png';
 
+            $skip = false;
             switch($status) {
                 case "In Progress":
                     $statusToShow = "In flight";
@@ -68,13 +69,34 @@ class EpicsController
                     }
                     break;
                 case "Closed":
-                    $statusToShow = 'Landed';
+                    if (!($issue['fields']['resolution']['name'] == 'Done'
+                        || $issue['fields']['resolution']['name'] == 'Complete'
+                        || $issue['fields']['resolution']['name'] == 'Fixed')) {
+                        $statusToShow = 'Cancelled';
+                    } else {
+                        $statusToShow = 'Landed';
+                    }
+                    $changeLog = $dao->getChangeLog($issue['id']);
+                    foreach ($changeLog as $action) {
+                        if ($action['items'][0]['toString'] === 'Closed') {
+                            $since = DateFormatter::getAge($action['created']);
+                            preg_match('/([0-9]+)d/', $since, $matches);
+                            if ($matches[1] > 7) {
+                                $skip = true;
+                                break;
+                            }
+                        }
+                    }
                     $order = time();
                     break;
                 default:
                     $order = 0;
                     $statusToShow = '';
                     break;
+            }
+
+            if ($skip) {
+                continue;
             }
 
             if (!isset($issues[$sched])) {
