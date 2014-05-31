@@ -3,15 +3,20 @@ function load(type, interval) {
     var templatePath = "./web/templates/" + templateType + "/" + type + ".mst";
 
     $.get(templatePath, function (templateContent) {
+        updateTemplate(type);
         setInterval(
-            function () {
-                $("#content").load("./api/" + type + ".php", function (response) {
-                    var data = JSON.parse(response);
-                    var content = Mustache.render(templateContent, data);
-                    $(this).html(content);
-                });
+            function() {
+                updateTemplate(type, templateContent);
             },
             interval
         );
+    });
+}
+
+function updateTemplate(type, templateContent) {
+    $("#content").load("./api/" + type + ".php", function (response) {
+        var data = JSON.parse(response);
+        var content = Mustache.render(templateContent, data);
+        $(this).html(content);
     });
 }

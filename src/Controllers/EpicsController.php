@@ -54,12 +54,22 @@ class EpicsController
             $icon = $app['config']['teams'][$component]['id'] . '.png';
 
             $skip = false;
+            $statusFromCache = apc_fetch($issue['id']);
+            if ($statusFromCache === $status) {
+                $changeLog = apc_fetch('changes-' . $issue['id']);
+            } else {
+                apc_store($issue['id'], $status);
+                $changeLog = array();
+            }
             switch($status) {
                 case "In Progress":
                     $statusToShow = "In flight";
                     $statusId = 'progress';
 
-                    $changeLog = $dao->getChangeLog($issue['id']);
+                    if (empty($changeLog)) {
+                        $changeLog = $dao->getChangeLog($issue['id']);
+                        apc_store('changes-' . $issue['id'], $changeLog);
+                    }
                     $closed = false;
                     foreach ($changeLog as $action) {
                         if ($action['items'][0]['toString'] === 'Closed') {
@@ -84,12 +94,15 @@ class EpicsController
                         $statusToShow = 'Shipped';
                         $statusId = 'shipped';
                     }
-                    $changeLog = $dao->getChangeLog($issue['id']);
+                    if (empty($changeLog)) {
+                        $changeLog = $dao->getChangeLog($issue['id']);
+                        apc_store('changes-' . $issue['id'], $changeLog);
+                    }
                     foreach ($changeLog as $action) {
                         if ($action['items'][0]['toString'] === 'Closed') {
                             $since = DateFormatter::getAge($action['created']);
                             preg_match('/([0-9]+)d/', $since, $matches);
-                            if ($matches[1] > 7) {
+                            if (isset($matches[1]) &&  $matches[1] > 7) {
                                 $skip = true;
                                 break;
                             }
