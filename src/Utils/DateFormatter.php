@@ -28,10 +28,10 @@ class DateFormatter
         $days = (int) ($diff / (24 * 3600));
         $diff = $diff % (24 * 3600);
         $hours = (int) ($diff / 3600);
-        $diff = $diff % 3600;
-        $minutes = (int) ($diff / (60));
+        //$diff = $diff % 3600;
+        //$minutes = (int) ($diff / (60));
 
-        return sprintf('%dd %dh %dm', $days, $hours, $minutes);
+        return sprintf('%dd %dh', $days, $hours);
     }
 
     /**

@@ -84,6 +84,21 @@ class EpicsController
                     }
                     $statusToShow .= ' - ' . $since;
                     break;
+                case "Open":
+                    $statusToShow = "Delated";
+                    $statusId = 'delayed';
+
+                    if (empty($changeLog)) {
+                        $changeLog = $dao->getChangeLog($issue['id']);
+                        apc_store('changes-' . $issue['id'], $changeLog);
+                    }
+                    $skip = true;
+                    foreach ($changeLog as $action) {
+                        if ($action['items'][0]['toString'] === 'Closed') {
+                            $skip = false;
+                        }
+                    }
+                    break;
                 case "Closed":
                     if (!($issue['fields']['resolution']['name'] == 'Done'
                         || $issue['fields']['resolution']['name'] == 'Complete'
@@ -108,7 +123,7 @@ class EpicsController
                             }
                         }
                     }
-                    $order = time();
+                    $order = 0;
                     break;
                 default:
                     $statusId = 'waiting';
