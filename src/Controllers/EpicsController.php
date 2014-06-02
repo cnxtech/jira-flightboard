@@ -57,24 +57,32 @@ class EpicsController
             switch($status) {
                 case "In Progress":
                     $statusToShow = "In flight";
+                    $statusId = 'progress';
 
                     $changeLog = $dao->getChangeLog($issue['id']);
+                    $closed = false;
                     foreach ($changeLog as $action) {
+                        if ($action['items'][0]['toString'] === 'Closed') {
+                            $closed = true;
+                            $statusToShow = 'Delayed';
+                            $statusId = 'delayed';
+                        }
                         if ($action['items'][0]['toString'] === 'In Progress') {
                             $since = DateFormatter::getAge($action['created']);
                             $order = strtotime($action['created']);
-                            $statusToShow .= ' - ' . $since;
-                            break;
                         }
                     }
+                    $statusToShow .= ' - ' . $since;
                     break;
                 case "Closed":
                     if (!($issue['fields']['resolution']['name'] == 'Done'
                         || $issue['fields']['resolution']['name'] == 'Complete'
                         || $issue['fields']['resolution']['name'] == 'Fixed')) {
                         $statusToShow = 'Cancelled';
+                        $statusId = 'cancelled';
                     } else {
-                        $statusToShow = 'Landed';
+                        $statusToShow = 'Shipped';
+                        $statusId = 'shipped';
                     }
                     $changeLog = $dao->getChangeLog($issue['id']);
                     foreach ($changeLog as $action) {
@@ -90,6 +98,7 @@ class EpicsController
                     $order = time();
                     break;
                 default:
+                    $statusId = 'waiting';
                     $order = 0;
                     $statusToShow = '';
                     break;
@@ -110,7 +119,8 @@ class EpicsController
                 'key' => $team . '-' . $keyParts[1],
                 'summary' => $issue['fields']['summary'],
                 'sched' => $sched,
-                'status' => $statusToShow,
+                'status' => $statusId,
+                'statusMessage' => $statusToShow,
                 'icon' => $icon
             );
         }

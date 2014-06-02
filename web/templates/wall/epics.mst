@@ -1,24 +1,25 @@
 <table cellspacing="0" cellpadding="0">
     <colgroup>
         <col width="4%">
-        <col width="11%">
+        <col width="9%">
         <col width=55%">
         <col width="11%">
         <col width="23%">
     </colgroup>
     <tr class="header">
-        <td class="flight" colspan="2">Flight</td>
-        <td>Destination</td>
+        <td></td>
         <td>Sched</td>
+        <td>City</td>
+        <td>Flight</td>
         <td>Status</td>
     </tr>
 {{ #issues }}
     <tr>
         <td class="image"><img src="./web/img/{{ icon }}"/></td>
-        <td class="key">{{ key }}</td>
-        <td><div class="summary">{{ summary }}</div></td>
         <td>{{ sched }}</td>
-        <td>{{ status }}</td>
+        <td><div class="summary">{{ summary }}</div></td>
+        <td>{{ key }}</td>
+        <td class="status-{{ status }}">{{ statusMessage }}</td>
     </tr>
 {{ /issues }}
 </table>

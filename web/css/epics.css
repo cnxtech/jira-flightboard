@@ -3,13 +3,15 @@ img {
 }
 
 body {
-    background: #1C1C6E;
+    /*background: #1C1C6E;*/
+    background: black;
     color: white;
     font-size: 20px;
 }
 
 td {
-    border-bottom: 2px solid #8E8ED8;
+    /*border-bottom: 2px solid #8E8ED8;*/
+    border-bottom: 2px solid grey;
     padding-top: 1px;
 }
 
@@ -26,10 +28,15 @@ td {
     padding-top: 2px;
 }
 
-.key {
-    padding-left: 8px;
+.status-cancelled {
+    color: red;
 }
-
-.flight {
-    text-align: center;
+.status-shipped {
+    color: limegreen;
+}
+.status-delayed {
+    color: yellow;
+}
+.summary {
+    color: #CCB36E;
 }
