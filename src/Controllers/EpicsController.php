@@ -19,58 +19,68 @@ use JiraDashboard\Daos\IssuesRestApiDao;
 
 class EpicsController
 {
-    /**
-     * @param Application $app
-     * @return Response
-     */
-    public function get(Application $app)
+    private $dao;
+    private $config;
+
+    public function __construct(Application $app)
     {
-        $dao = new IssuesRestApiDao(
-            $app['config']['jira_api']['endpoint'],
-            $app['config']['jira_api']['token']
+        $this->config = $app['config'];
+
+        $this->dao = new IssuesRestApiDao(
+            $this->config['jira_api']['endpoint'],
+            $this->config['jira_api']['token']
         );
+    }
 
-        $status = $app['config']['epics']['status'];
+    public function get()
+    {
+        // get issues from jira
+        $status = $this->config['epics']['status'];
         $status[] = date('F', strtotime('+1 month'));; // adds the month as another status
-
         try {
-            $rawIssues = $dao->getByStatus(
-                $app['config']['epics']['project'],
+            $rawIssues = $this->dao->getByStatus(
+                $this->config['epics']['project'],
                 $status
             );
         } catch (\Exception $e) {
             return $app->json(array('error' => 'Could not get issues from Jira.'));
         }
 
-        $issues = array();
+        // set up initial issues array ready to be ordered
+        $groupedIssues = array(
+            'shipped' => array(),
+            'cancelled' => array(),
+            'delayed' => array(),
+            'progress' => array(),
+            'waiting' => array()
+        );
+        foreach (array_keys($this->config['teams']) as $team) {
+            foreach (array_keys($groupedIssues) as $issueGroup) {
+                $groupedIssues[$issueGroup][$team] = array();
+            }
+        }
+        //var_dump($groupedIssues);
 
+        // iterate issues to construct ordered array
         foreach ($rawIssues['issues'] as $issue) {
+            // get basic info from issue array
             $component = $issue['fields']['components'][0]['name'];
             $keyParts = explode('-', $issue['key']);
-            $team = $app['config']['teams'][$component]['key'];
-
+            $issueKey = $keyParts[1];
             $status = $issue['fields']['status']['name'];
+            $rank = (int) $issue['fields']['customfield_10250'];
+            $team = $this->config['teams'][$component]['key'];
+            $icon = $this->config['teams'][$component]['id'] . '.png';
             $sched = in_array($status, array('In Progress', 'Closed')) ? date('F') : $status;
-            $icon = $app['config']['teams'][$component]['id'] . '.png';
 
             $skip = false;
-            $statusFromCache = apc_fetch($issue['id']);
-            if ($statusFromCache === $status) {
-                $changeLog = apc_fetch('changes-' . $issue['id']);
-            } else {
-                apc_store($issue['id'], $status);
-                $changeLog = array();
-            }
+            // logic for each issue group
             switch($status) {
                 case "In Progress":
                     $statusToShow = "In flight";
                     $statusId = 'progress';
-
-                    if (empty($changeLog)) {
-                        $changeLog = $dao->getChangeLog($issue['id']);
-                        apc_store('changes-' . $issue['id'], $changeLog);
-                    }
                     $closed = false;
+                    $changeLog = $this->getChangeLog($issue['id'], $status);
                     foreach ($changeLog as $action) {
                         if ($action['items'][0]['toString'] === 'Closed') {
                             $closed = true;
@@ -85,14 +95,10 @@ class EpicsController
                     $statusToShow .= ' - ' . $since;
                     break;
                 case "Open":
-                    $statusToShow = "Delated";
+                    $statusToShow = "Delayed";
                     $statusId = 'delayed';
-
-                    if (empty($changeLog)) {
-                        $changeLog = $dao->getChangeLog($issue['id']);
-                        apc_store('changes-' . $issue['id'], $changeLog);
-                    }
                     $skip = true;
+                    $changeLog = $this->getChangeLog($issue['id'], $status);
                     foreach ($changeLog as $action) {
                         if ($action['items'][0]['toString'] === 'Closed') {
                             $skip = false;
@@ -109,10 +115,7 @@ class EpicsController
                         $statusToShow = 'Shipped';
                         $statusId = 'shipped';
                     }
-                    if (empty($changeLog)) {
-                        $changeLog = $dao->getChangeLog($issue['id']);
-                        apc_store('changes-' . $issue['id'], $changeLog);
-                    }
+                    $changeLog = $this->getChangeLog($issue['id'], $status);
                     foreach ($changeLog as $action) {
                         if ($action['items'][0]['toString'] === 'Closed') {
                             $since = DateFormatter::getAge($action['created']);
@@ -136,14 +139,8 @@ class EpicsController
                 continue;
             }
 
-            if (!isset($issues[$sched])) {
-                $issues[$sched] = array();
-            }
-            if (!isset($issues[$sched][$order])) {
-                $issues[$sched][$order] = array();
-            }
-
-            $issues[strtotime($sched)][$order][] = array(
+            // add issue in the correct position
+            $groupedIssues[$statusId][$component][$rank] = array(
                 'key' => $team . '-' . $keyParts[1],
                 'summary' => $issue['fields']['summary'],
                 'sched' => $sched,
@@ -152,16 +149,40 @@ class EpicsController
                 'icon' => $icon
             );
         }
-        ksort($issues);
 
-        $formattedIssues = array();
-        foreach ($issues as $issuesMonth) {
-            ksort($issuesMonth);
-            foreach ($issuesMonth as $issueList) {
-                $formattedIssues = array_merge($formattedIssues, $issueList);
+        // order issues
+        $issues = array();
+        foreach (array_keys($groupedIssues) as $group) {
+            //var_dump('ordering group ' . $group);
+            while(!empty($groupedIssues[$group])) {
+                foreach (array_keys($groupedIssues[$group]) as $team) {
+                    //var_dump('checking team ' . $team);
+                    if (empty($groupedIssues[$group][$team])) {
+                        unset($groupedIssues[$group][$team]);
+                    } else {
+                        //var_dump('adding an issue');
+                        $issues[] = array_shift($groupedIssues[$group][$team]);
+                    }
+                }
             }
         }
 
-        return json_encode(array('issues' => $formattedIssues));
+        return json_encode(array('issues' => $issues));
     }
+
+    private function getChangeLog($issueId, $status)
+    {
+        $statusFromCache = apc_fetch($issueId);
+
+        if ($statusFromCache === $status) {
+            $changeLog = apc_fetch('changes-' . $issueId);
+        } else {
+            $changeLog = $this->dao->getChangeLog($issueId);
+            apc_store($issueId, $status);
+            apc_store('changes-' . $issueId, $changeLog);
+        }
+
+        return $changeLog;
+    }
+
 }

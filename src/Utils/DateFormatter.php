@@ -21,7 +21,7 @@ class DateFormatter
     {
         $diff = time() - strtotime($createdString);
 
-        if ($diff < 60) {
+        if ($diff < 3600) {
             return 'just now';
         }
 
@@ -31,7 +31,7 @@ class DateFormatter
         //$diff = $diff % 3600;
         //$minutes = (int) ($diff / (60));
 
-        return sprintf('%dd %dh', $days, $hours);
+        return $days == 0 ? sprintf('%dh', $hours) : sprintf('%dd %dh', $days, $hours);
     }
 
     /**

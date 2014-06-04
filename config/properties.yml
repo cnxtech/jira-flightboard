@@ -3,6 +3,7 @@ epics:
   status:
     - "In Progress"
     - "Closed"
+    - "Open"
 
 incidents:
   project: "Incident Management"
@@ -16,15 +17,6 @@ smell_levels:
   2: 86400 # 1 day
 
 teams:
-  Recognition Infrastructure:
-    key: RIN
-    id: 10951
-  Recognition Algorithm:
-    key: RIN
-    id: 10951
-  Shazam Connect:
-    key: SOC
-    id: 10242
   iOS Team:
     key: SIO
     id: 10150
@@ -43,9 +35,18 @@ teams:
   Ingestion Team:
     key: DMT
     id: 10063
-  IT Ops:
-    key: OPS
-    id: 10070
+  Experiences Team:
+    key: TVT
+    id: 10051
+  Recognition Infrastructure:
+    key: RIN
+    id: 10951
+  Recognition Algorithm:
+    key: RIN
+    id: 10951
+  Shazam Connect:
+    key: SOC
+    id: 10242
   Infrastructure Ops:
     key: OPS
     id: 10070
@@ -58,12 +59,12 @@ teams:
   SE - GreenTeam:
     key: SE
     id: 11352
-  Infra Tools:
-    key: ITL
-    id: 10211
   Experiences Services:
     key: TVT
     id: 10051
-  Experiences Team:
-    key: TVT
-    id: 10051
+  Infra Tools:
+    key: ITL
+    id: 10211
+  IT Ops:
+    key: OPS
+    id: 10070
