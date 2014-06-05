@@ -123,7 +123,7 @@ class EpicsController
                         || $issue['fields']['resolution']['name'] == 'Completed'
                         || $issue['fields']['resolution']['name'] == 'Fixed')) {
                         $statusToShow = 'Cancelled';
-                        $$group = 'cancelled';
+                        $group = 'cancelled';
                         $statusId = $group;
                     } else {
                         $statusToShow = 'Shipped';
