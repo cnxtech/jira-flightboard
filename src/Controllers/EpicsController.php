@@ -120,7 +120,7 @@ class EpicsController
                     break;
                 case "Closed":
                     if (!($issue['fields']['resolution']['name'] == 'Done'
-                        || $issue['fields']['resolution']['name'] == 'Complete'
+                        || $issue['fields']['resolution']['name'] == 'Completed'
                         || $issue['fields']['resolution']['name'] == 'Fixed')) {
                         $statusToShow = 'Cancelled';
                         $$group = 'cancelled';
