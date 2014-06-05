@@ -26,12 +26,15 @@ class DateFormatter
         }
 
         $days = (int) ($diff / (24 * 3600));
+
+        if ($days > 0) {
+            return $days . 'd';
+        }
+
         $diff = $diff % (24 * 3600);
         $hours = (int) ($diff / 3600);
-        //$diff = $diff % 3600;
-        //$minutes = (int) ($diff / (60));
 
-        return $days == 0 ? sprintf('%dh', $hours) : sprintf('%dd %dh', $days, $hours);
+        return $hours . 'h';
     }
 
     /**

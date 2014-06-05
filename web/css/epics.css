@@ -27,6 +27,12 @@ td {
     padding-top: 2px;
 }
 
+.status-progress-red {
+    color: red;
+}
+.status-progress-yellow {
+    color: yellow;
+}
 .status-cancelled {
     color: red;
 }

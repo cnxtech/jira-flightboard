@@ -59,11 +59,12 @@ class EpicsController
                 $groupedIssues[$issueGroup][$team] = array();
             }
         }
-        //var_dump($groupedIssues);
 
+        $titles = array();
         // iterate issues to construct ordered array
         foreach ($rawIssues['issues'] as $issue) {
             // get basic info from issue array
+            $summary = $issue['fields']['summary'];
             $component = $issue['fields']['components'][0]['name'];
             $keyParts = explode('-', $issue['key']);
             $issueKey = $keyParts[1];
@@ -77,7 +78,11 @@ class EpicsController
             // logic for each issue group
             switch($status) {
                 case "In Progress":
+                    if (in_array($summary, $titles)) {
+                        
+                    }
                     $statusToShow = "In flight";
+                    $group = 'progress';
                     $statusId = 'progress';
                     $closed = false;
                     $changeLog = $this->getChangeLog($issue['id'], $status);
@@ -93,10 +98,18 @@ class EpicsController
                         }
                     }
                     $statusToShow .= ' - ' . $since;
+                    if (preg_match('/^([0-9]+)d/', $since, $matches)) {
+                        if ($matches[1] >= 45) {
+                            $statusId = 'progress-red';
+                        } elseif ($matches[1] >= 30) {
+                            $statusId = 'progress-yellow';
+                        }
+                    }
                     break;
                 case "Open":
                     $statusToShow = "Delayed";
-                    $statusId = 'delayed';
+                    $group = 'delayed';
+                    $statusId = $group;
                     $skip = true;
                     $changeLog = $this->getChangeLog($issue['id'], $status);
                     foreach ($changeLog as $action) {
@@ -110,10 +123,12 @@ class EpicsController
                         || $issue['fields']['resolution']['name'] == 'Complete'
                         || $issue['fields']['resolution']['name'] == 'Fixed')) {
                         $statusToShow = 'Cancelled';
-                        $statusId = 'cancelled';
+                        $$group = 'cancelled';
+                        $statusId = $group;
                     } else {
                         $statusToShow = 'Shipped';
-                        $statusId = 'shipped';
+                        $group = 'shipped';
+                        $statusId = $group;
                     }
                     $changeLog = $this->getChangeLog($issue['id'], $status);
                     foreach ($changeLog as $action) {
@@ -129,7 +144,8 @@ class EpicsController
                     $order = 0;
                     break;
                 default:
-                    $statusId = 'waiting';
+                    $group = 'waiting';
+                    $statusId = $group;
                     $order = 0;
                     $statusToShow = '';
                     break;
@@ -140,9 +156,9 @@ class EpicsController
             }
 
             // add issue in the correct position
-            $groupedIssues[$statusId][$component][$rank] = array(
+            $groupedIssues[$group][$component][$rank] = array(
                 'key' => $team . '-' . $keyParts[1],
-                'summary' => $issue['fields']['summary'],
+                'summary' => $summary,
                 'sched' => $sched,
                 'status' => $statusId,
                 'statusMessage' => $statusToShow,
@@ -153,14 +169,11 @@ class EpicsController
         // order issues
         $issues = array();
         foreach (array_keys($groupedIssues) as $group) {
-            //var_dump('ordering group ' . $group);
             while(!empty($groupedIssues[$group])) {
                 foreach (array_keys($groupedIssues[$group]) as $team) {
-                    //var_dump('checking team ' . $team);
                     if (empty($groupedIssues[$group][$team])) {
                         unset($groupedIssues[$group][$team]);
                     } else {
-                        //var_dump('adding an issue');
                         $issues[] = array_shift($groupedIssues[$group][$team]);
                     }
                 }
