@@ -19,7 +19,12 @@
         <td>{{ sched }}</td>
         <td><div class="summary">{{ summary }}</div></td>
         <td>{{ key }}</td>
+        {{ #since }}
+        <td>{{ statusMessage }} - <span class="status-{{ status }}">{{ since }}</span></td>
+        {{ /since }}
+        {{ ^since }}
         <td class="status-{{ status }}">{{ statusMessage }}</td>
+        {{ /since }}
     </tr>
 {{ /issues }}
 </table>

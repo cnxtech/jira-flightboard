@@ -60,7 +60,6 @@ class EpicsController
             }
         }
 
-        $titles = array();
         // iterate issues to construct ordered array
         foreach ($rawIssues['issues'] as $issue) {
             // get basic info from issue array
@@ -78,9 +77,6 @@ class EpicsController
             // logic for each issue group
             switch($status) {
                 case "In Progress":
-                    if (in_array($summary, $titles)) {
-                        
-                    }
                     $statusToShow = "In flight";
                     $group = 'progress';
                     $statusId = 'progress';
@@ -97,13 +93,16 @@ class EpicsController
                             $order = strtotime($action['created']);
                         }
                     }
-                    $statusToShow .= ' - ' . $since;
                     if (preg_match('/^([0-9]+)d/', $since, $matches)) {
                         if ($matches[1] >= 45) {
                             $statusId = 'progress-red';
                         } elseif ($matches[1] >= 30) {
                             $statusId = 'progress-yellow';
                         }
+                    }
+                    if ($statusId === 'delayed') {
+                        $statusToShow .= ' - ' . $since;
+                        unset($since);
                     }
                     break;
                 case "Open":
@@ -156,7 +155,7 @@ class EpicsController
             }
 
             // add issue in the correct position
-            $groupedIssues[$group][$component][$rank] = array(
+            $ticket = array(
                 'key' => $team . '-' . $keyParts[1],
                 'summary' => $summary,
                 'sched' => $sched,
@@ -164,17 +163,54 @@ class EpicsController
                 'statusMessage' => $statusToShow,
                 'icon' => $icon
             );
+
+            if ($status === 'In Progress') {
+                if ($statusId !== 'delayed') {
+                    $ticket['since'] = $since;
+                }
+
+                if (!isset($groupedIssues[$group][$summary])) {
+                    $groupedIssues[$group][$summary] = array();
+                }
+                if (!isset($groupedIssues[$group][$summary][$order])) {
+                    $groupedIssues[$group][$summary][$order] = array();
+                }
+                $groupedIssues[$group][$summary][$order][] = $ticket;
+            } else {
+                $groupedIssues[$group][$component][$rank] = $ticket;
+            }
         }
 
         // order issues
         $issues = array();
         foreach (array_keys($groupedIssues) as $group) {
-            while(!empty($groupedIssues[$group])) {
-                foreach (array_keys($groupedIssues[$group]) as $team) {
-                    if (empty($groupedIssues[$group][$team])) {
-                        unset($groupedIssues[$group][$team]);
-                    } else {
-                        $issues[] = array_shift($groupedIssues[$group][$team]);
+            if ($group === 'progress') {
+                $issuesByTime = array();
+                foreach (array_keys($groupedIssues[$group]) as $title) {
+                    ksort($groupedIssues[$group][$title]);
+                    reset($groupedIssues[$group][$title]);
+                    $oldestTime = key($groupedIssues[$group][$title]);
+                    if (!isset($issuesByTime[$oldestTime])) {
+                        $issuesByTime[$oldestTime] = array();
+                    }
+                    foreach ($groupedIssues[$group][$title] as $time => $issuesGroupedByTitle) {
+                        ksort($issuesGroupedByTitle);
+                        $issuesByTime[$oldestTime] = array_merge($issuesByTime[$oldestTime], $issuesGroupedByTitle);
+                    }
+                    ksort($issuesByTime);
+                }
+
+                foreach ($issuesByTime as $issuesInTimestamp) {
+                    $issues = array_merge($issues, $issuesInTimestamp);
+                }
+            } else {
+                while(!empty($groupedIssues[$group])) {
+                    foreach (array_keys($groupedIssues[$group]) as $team) {
+                        if (empty($groupedIssues[$group][$team])) {
+                            unset($groupedIssues[$group][$team]);
+                        } else {
+                            $issues[] = array_shift($groupedIssues[$group][$team]);
+                        }
                     }
                 }
             }
