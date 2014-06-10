@@ -3,7 +3,7 @@ function load(type, interval) {
     var templatePath = "./web/templates/" + templateType + "/" + type + ".mst";
 
     $.get(templatePath, function (templateContent) {
-        updateTemplate(type);
+        updateTemplate(type, templateContent);
         setInterval(
             function() {
                 updateTemplate(type, templateContent);
