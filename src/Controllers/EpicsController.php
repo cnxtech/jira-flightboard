@@ -36,7 +36,7 @@ class EpicsController
     {
         // get issues from jira
         $status = $this->config['epics']['status'];
-        $status[] = date('F', strtotime('+1 month'));; // adds the month as another status
+        $status[] = date('F', strtotime('+1 month')); // adds the month as another status
         try {
             $rawIssues = $this->dao->getByStatus(
                 $this->config['epics']['project'],
@@ -83,14 +83,10 @@ class EpicsController
                     $closed = false;
                     $changeLog = $this->getChangeLog($issue['id'], $status);
                     foreach ($changeLog as $action) {
-                        if ($action['items'][0]['toString'] === 'Closed') {
-                            $closed = true;
-                            $statusToShow = 'Delayed';
-                            $statusId = 'delayed';
-                        }
                         if ($action['items'][0]['toString'] === 'In Progress') {
                             $since = DateFormatter::getAge($action['created']);
                             $order = strtotime($action['created']);
+                            break;
                         }
                     }
                     if (preg_match('/^([0-9]+)d/', $since, $matches)) {
@@ -100,10 +96,6 @@ class EpicsController
                             $statusId = 'progress-yellow';
                         }
                     }
-                    if ($statusId === 'delayed') {
-                        $statusToShow .= ' - ' . $since;
-                        unset($since);
-                    }
                     break;
                 case "Open":
                     $statusToShow = "Delayed";
@@ -112,11 +104,16 @@ class EpicsController
                     $skip = true;
                     $changeLog = $this->getChangeLog($issue['id'], $status);
                     foreach ($changeLog as $action) {
-                        if ($action['items'][0]['toString'] === 'Closed' 
-                            || $action['items'][0]['toString'] === 'In Progress') {
+                        if ($action['items'][0]['toString'] === 'In Progress') {
                             $skip = false;
                         }
                     }
+                    break;
+                case "Done":
+                    $statusToShow = 'Shipped';
+                    $group = 'shipped';
+                    $statusId = $group;
+                    $order = 0;
                     break;
                 case "Closed":
                     if (!($issue['fields']['resolution']['name'] == 'Done'
