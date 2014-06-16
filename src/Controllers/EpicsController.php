@@ -110,7 +110,7 @@ class EpicsController
                     }
                     break;
                 case "Done":
-                    $statusToShow = 'Shipped';
+                    $statusToShow = 'Testing';
                     $group = 'shipped';
                     $statusId = $group;
                     $order = 0;

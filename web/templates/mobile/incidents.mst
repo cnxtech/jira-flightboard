@@ -8,12 +8,13 @@
     </div>
 </div>
 
+{{ #issues }}
 <table cellspacing="0" cellpadding="0">
     <colgroup>
         <col width="69%">
         <col width="31%">
     </colgroup>
-{{ #issues }}
+{{ #1 }}
     <tr>
         <td class="header" colspan="5"><div>{{ priority }}</div><div class="total smell-{{ generalSmell }}">{{ issueList.length }} total tickets</div></td>
     </tr>
@@ -23,5 +24,23 @@
         <td><div class="time smell-{{ smell }}">{{ since }}</div></td>
     </tr>
     {{ /issueList }}
-{{ /issues }}
+{{ /1 }}
 </table>
+<table cellspacing="0" cellpadding="0">
+    <colgroup>
+        <col width="69%">
+        <col width="31%">
+    </colgroup>
+{{ #2 }}
+    <tr>
+        <td class="header" colspan="5"><div>{{ priority }}</div><div class="total smell-{{ generalSmell }}">{{ issueList.length }} total tickets</div></td>
+    </tr>
+    {{ #issueList }}
+    <tr class="back-smell-{{ generalSmell }}">
+        <td><div class="summary">{{ summary }}</div></td>
+        <td><div class="time smell-{{ smell }}">{{ since }}</div></td>
+    </tr>
+    {{ /issueList }}
+{{ /2 }}
+</table>
+{{ /issues }}
