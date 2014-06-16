@@ -112,7 +112,8 @@ class EpicsController
                     $skip = true;
                     $changeLog = $this->getChangeLog($issue['id'], $status);
                     foreach ($changeLog as $action) {
-                        if ($action['items'][0]['toString'] === 'Closed') {
+                        if ($action['items'][0]['toString'] === 'Closed' 
+                            || $action['items'][0]['toString'] === 'In Progress') {
                             $skip = false;
                         }
                     }
