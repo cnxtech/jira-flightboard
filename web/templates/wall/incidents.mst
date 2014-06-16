@@ -9,20 +9,22 @@
 <table cellspacing="0" cellpadding="0">
     <colgroup>
         <col width="10%">
-        <col width="18%">
-        <col width=47%">
+        <col width="5%">
+        <col width=50%">
+        <col width="10%">
         <col width="15%">
         <col width="15%">
     </colgroup>
 {{ #issues }}
     <tr>
-        <td class="header" colspan="5"><div>{{ priority }}</div><div class="total smell-{{ generalSmell }}">{{ issueList.length }} total tickets</div></td>
+        <td class="header" colspan="6"><div>{{ priority }}</div><div class="total smell-{{ generalSmell }}">{{ issueList.length }} total tickets</div></td>
     </tr>
     {{ #issueList }}
     <tr class="bg-{{ priority }}">
         <td>{{ key }}</td>
         <td><div class="time smell-{{ smell }}">{{ since }}</div></td>
         <td><div class="summary">{{ summary }}</div></td>
+        <td><div class="status">{{ status }}</div></td>
         <td class="assignee">{{ assignee }}</td>
         <td>{{ linked }}</td>
     </tr>

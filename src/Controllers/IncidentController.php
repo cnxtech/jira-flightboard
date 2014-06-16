@@ -86,7 +86,8 @@ class IncidentController
                 'since' => DateFormatter::getAge($issue['fields']['created']),
                 'smell' => $smell,
                 'linked' => implode(', ', array_keys($linkedIssues)),
-                'assignee' => $issue['fields']['assignee']['displayName']
+                'assignee' => $issue['fields']['assignee']['displayName'],
+                'status' => $issue['fields']['status']['name']
             );
 
             if ($smell > $issues[$priority]['generalSmell']) {
@@ -105,39 +106,8 @@ class IncidentController
         return json_encode(
             array(
                 'issues' => $formattedIssues,
-                'teams' => $this->getOrderedTeams($teams)
+                'teams' => $teams
             )
         );
-    }
-
-    private function getOrderedTeams($teams)
-    {
-        $orderedTeams = array();
-
-        foreach ($teams as $team => $info) {
-            if (!isset($orderedTeams[$info['smell']])) {
-                $orderedTeams[$info['smell']] = array();
-            }
-            if (!isset($orderedTeams[$info['smell']][$info['count']])) {
-                $orderedTeams[$info['smell']][$info['count']] = array();
-            }
-            $orderedTeams[$info['smell']][$info['count']][] = $team;
-        }
-
-        krsort($orderedTeams);
-        foreach (array_keys($orderedTeams) as $key) {
-            krsort($orderedTeams[$key]);
-        }
-
-        $teams = array();
-        foreach ($orderedTeams as $smells) {
-            foreach ($smells as $counts) {
-                foreach ($counts as $team) {
-                    $teams[] = $team;
-                }
-            }
-        }
-
-        return $teams;
     }
 }

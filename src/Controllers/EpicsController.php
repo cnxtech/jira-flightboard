@@ -50,8 +50,8 @@ class EpicsController
         $groupedIssues = array(
             'shipped' => array(),
             'cancelled' => array(),
-            'delayed' => array(),
             'progress' => array(),
+            'delayed' => array(),
             'waiting' => array()
         );
         foreach (array_keys($this->config['teams']) as $team) {
