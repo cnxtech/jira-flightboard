@@ -1,11 +1,3 @@
-<div class="header-info">
-    <div class="teams">
-{{ #teams }}
-        <div class="smell-{{ smell }}">{{ name }}: {{ count }}</div>
-{{ /teams }}
-    </div>
-</div>
-
 {{ #issues }}
 <table cellspacing="0" cellpadding="0">
     <colgroup>
@@ -17,9 +9,6 @@
         <col width="15%">
     </colgroup>
 {{ #1 }}
-    <tr>
-        <td class="header" colspan="6"><div>{{ priority }}</div><div class="total smell-{{ generalSmell }}">{{ issueList.length }} total tickets</div></td>
-    </tr>
     {{ #issueList }}
     <tr class="bg-{{ priority }}">
         <td>{{ key }}</td>
@@ -42,9 +31,6 @@
         <col width="15%">
     </colgroup>
 {{ #2 }}
-    <tr>
-        <td class="header" colspan="6"><div>{{ priority }}</div><div class="total smell-{{ generalSmell }}">{{ issueList.length }} total tickets</div></td>
-    </tr>
     {{ #issueList }}
     <tr class="bg-{{ priority }}">
         <td>{{ key }}</td>

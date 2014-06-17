@@ -73,15 +73,10 @@ class IncidentController
                 if (!in_array($status, array('Resolved'))) {
                     $jiraKey = explode('-', $linkedIssue['inwardIssue']['key']);
                     $teamName = $jiraKey[0];
-                    $linkedIssues[$teamName] = true;
-
-                    if (!isset($teams[$teamName])) {
-                        $teams[$teamName] = array('smell' => 0, 'count' => 0, 'name' => $teamName);
+                    if (!isset($linkedIssues[$teamName])) {
+                        $linkedIssues[$teamName] = 0;
                     }
-                    $teams[$teamName]['count']++;
-                    $teams[$teamName]['smell'] = $teams[$teamName]['smell'] < $smell
-                        ? $smell
-                        : $teams[$teamName]['smell'];
+                    $linkedIssues[$teamName]++;
                 }
             }
             $status = $issue['fields']['status']['name'];
@@ -102,12 +97,17 @@ class IncidentController
                     $group = 1;
             }
 
+            $linkedIssuesFormatted = array();
+            foreach ($linkedIssues as $linkedIssue => $count) {
+                $linkedIssuesFormatted[] = sprintf('%s (%d)', $linkedIssue, $count);
+            }
+
             $issues[$group][$priority]['issueList'][] = array(
                 'key' => $issue['key'],
                 'summary' => $issue['fields']['summary'],
                 'since' => DateFormatter::getAge($issue['fields']['created']),
                 'smell' => $smell,
-                'linked' => implode(', ', array_keys($linkedIssues)),
+                'linked' => implode(', ', $linkedIssuesFormatted),
                 'assignee' => $issue['fields']['assignee']['displayName'],
                 'status' => $status
             );
@@ -126,11 +126,6 @@ class IncidentController
             }
         }
 
-        return json_encode(
-            array(
-                'issues' => $formattedIssues,
-                'teams' => array_values($teams)
-            )
-        );
+        return json_encode(array('issues' => $formattedIssues));
     }
 }
