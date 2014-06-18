@@ -9,6 +9,7 @@
         <col width="15%">
     </colgroup>
 {{ #1 }}
+{{ #. }}
     {{ #issueList }}
     <tr class="bg-{{ priority }}">
         <td>{{ key }}</td>
@@ -19,6 +20,7 @@
         <td>{{ linked }}</td>
     </tr>
     {{ /issueList }}
+{{ /. }}
 {{ /1 }}
 </table>
 <table cellspacing="0" cellpadding="0">
@@ -31,6 +33,7 @@
         <col width="15%">
     </colgroup>
 {{ #2 }}
+{{ #. }}
     {{ #issueList }}
     <tr class="bg-{{ priority }}">
         <td>{{ key }}</td>
@@ -41,6 +44,7 @@
         <td>{{ linked }}</td>
     </tr>
     {{ /issueList }}
+{{ /. }}
 {{ /2 }}
 </table>
 {{ /issues }}

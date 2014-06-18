@@ -49,9 +49,10 @@ class EpicsController
         // set up initial issues array ready to be ordered
         $groupedIssues = array(
             'shipped' => array(),
-            'cancelled' => array(),
+            'cancelled-progress' => array(),
             'progress' => array(),
             'delayed' => array(),
+            'cancelled' => array(),
             'waiting' => array()
         );
         foreach (array_keys($this->config['teams']) as $team) {
