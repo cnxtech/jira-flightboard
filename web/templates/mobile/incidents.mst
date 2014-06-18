@@ -1,26 +1,10 @@
 {{ #issues }}
-<table cellspacing="0" cellpadding="0">
-    <colgroup>
-        <col width="69%">
-        <col width="31%">
-    </colgroup>
 {{ #1 }}
-{{ #. }}
-    {{ #issueList }}
-    <tr class="back-smell-{{ generalSmell }}">
-        <td><div class="summary">{{ summary }}</div></td>
-        <td><div class="time smell-{{ smell }}">{{ since }}</div></td>
-    </tr>
-    {{ /issueList }}
-{{ /. }}
-{{ /1 }}
-</table>
 <table cellspacing="0" cellpadding="0">
     <colgroup>
         <col width="69%">
         <col width="31%">
     </colgroup>
-{{ #2 }}
 {{ #. }}
     {{ #issueList }}
     <tr class="back-smell-{{ generalSmell }}">
@@ -29,6 +13,38 @@
     </tr>
     {{ /issueList }}
 {{ /. }}
-{{ /2 }}
 </table>
+{{ /1 }}
+{{ #2 }}
+<table cellspacing="0" cellpadding="0">
+    <colgroup>
+        <col width="69%">
+        <col width="31%">
+    </colgroup>
+{{ #. }}
+    {{ #issueList }}
+    <tr class="back-smell-{{ generalSmell }}">
+        <td><div class="summary">{{ summary }}</div></td>
+        <td><div class="time smell-{{ smell }}">{{ since }}</div></td>
+    </tr>
+    {{ /issueList }}
+{{ /. }}
+</table>
+{{ /2 }}
+{{ #3 }}
+<table cellspacing="0" cellpadding="0">
+    <colgroup>
+        <col width="69%">
+        <col width="31%">
+    </colgroup>
+{{ #. }}
+    {{ #issueList }}
+    <tr class="back-smell-{{ generalSmell }}">
+        <td><div class="summary">{{ summary }}</div></td>
+        <td><div class="time smell-{{ smell }}">{{ since }}</div></td>
+    </tr>
+    {{ /issueList }}
+{{ /. }}
+</table>
+{{ /3 }}
 {{ /issues }}

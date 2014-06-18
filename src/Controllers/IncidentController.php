@@ -47,12 +47,20 @@ class IncidentController
             $issues[1][$priority] = array(
                 'priority' => $priority,
                 'generalSmell' => 0,
-                'issueList' => array()
+                0 => array(),
+                1 => array()
             );
             $issues[2][$priority] = array(
                 'priority' => $priority,
                 'generalSmell' => 0,
-                'issueList' => array()
+                0 => array(),
+                1 => array()
+            );
+            $issues[3][$priority] = array(
+                'priority' => $priority,
+                'generalSmell' => 0,
+                0 => array(),
+                1 => array()
             );
         }
 
@@ -88,17 +96,17 @@ class IncidentController
                     break;
                 case 'Fixed':
                     $status = 'All clear';
-                    $group = 2;
+                    $group = 3;
                     $statusOrder = 1;
                     break;
                 case 'Closed':
                     $status = 'Resolved';
-                    $group = 2;
+                    $group = 3;
                     $statusOrder = 2;
                     break;
                 default:
-                    $group = 1;
-                    $statusOrder = 2;
+                    $group = 2;
+                    $statusOrder = 1;
             }
 
             $linkedIssuesFormatted = array();
@@ -122,12 +130,14 @@ class IncidentController
         $formattedIssues = array();
         foreach ($issues as $group => $groupedIssues) {
             foreach ($groupedIssues as $priority => $priorityIssues) {
-                foreach (array_keys($priorityIssues) as $statusOrder)
-                if (!empty($issues[$group][$priority][$statusOrder]['issueList'])) {
-                    if (!isset($formattedIssues[$group])) {
-                        $formattedIssues[$group] = array();
+                foreach (array_keys($priorityIssues) as $statusOrder) {
+                    if (!is_int($statusOrder)) continue;
+                    if (!empty($issues[$group][$priority][$statusOrder]['issueList'])) {
+                        if (!isset($formattedIssues[$group])) {
+                            $formattedIssues[$group] = array();
+                        }
+                        $formattedIssues[$group][] = $issues[$group][$priority][$statusOrder];
                     }
-                    $formattedIssues[$group][] = $issues[$group][$priority][$statusOrder];
                 }
             }
         }
