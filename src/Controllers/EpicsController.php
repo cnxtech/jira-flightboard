@@ -138,6 +138,9 @@ class EpicsController
                                 break;
                             }
                         }
+                        if ($action['items'][0]['toString'] === 'In Progress' && $group === 'cancelled') {
+                            $group = 'cancelled-progress';
+                        }
                     }
                     $order = 0;
                     break;
