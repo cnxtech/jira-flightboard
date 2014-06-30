@@ -72,7 +72,7 @@ class EpicsController
             $rank = (int) $issue['fields']['customfield_10250'];
             $team = $this->config['teams'][$component]['key'];
             $icon = $this->config['teams'][$component]['id'] . '.png';
-            $sched = date('F');
+            $sched = in_array($status, array('In Progress', 'Closed', 'Resolved')) ? date('F') : $status;
 
             $skip = false;
             // logic for each issue group
