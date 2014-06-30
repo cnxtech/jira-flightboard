@@ -59,7 +59,6 @@ abstract class RestApiDao
 
         $responseArray = json_decode($responseJson, true);
         if (200 != $httpStatus || $responseArray === null) {
-            var_dump($httpStatus, $responseArray);
             throw new \Exception();
         }
 
