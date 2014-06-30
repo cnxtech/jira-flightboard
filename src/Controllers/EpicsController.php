@@ -49,6 +49,7 @@ class EpicsController
         // set up initial issues array ready to be ordered
         $groupedIssues = array(
             'shipped' => array(),
+            'release' => array(),
             'cancelled-progress' => array(),
             'progress' => array(),
             'delayed' => array(),
@@ -110,9 +111,9 @@ class EpicsController
                         }
                     }
                     break;
-                case "Done":
-                    $statusToShow = 'Testing';
-                    $group = 'shipped';
+                case "Resolved":
+                    $statusToShow = 'Awaiting Release';
+                    $group = 'release';
                     $statusId = $group;
                     $order = 0;
                     break;

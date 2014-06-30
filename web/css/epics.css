@@ -43,6 +43,9 @@ td {
 .status-shipped {
     color: limegreen;
 }
+.status-shipped {
+    color: darkgreen;
+}
 .status-delayed {
     color: yellow;
 }

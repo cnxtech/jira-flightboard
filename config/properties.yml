@@ -4,6 +4,7 @@ epics:
     - "In Progress"
     - "Closed"
     - "Open"
+    - "Resolved"
 
 incidents:
   project: "Incident Management"
