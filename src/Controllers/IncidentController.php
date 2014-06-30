@@ -94,7 +94,7 @@ class IncidentController
                     $group = 1;
                     $statusOrder = 1;
                     break;
-                case 'Fixed':
+                case 'ALL CLEAR':
                     $status = 'All clear';
                     $group = 3;
                     $statusOrder = 1;
