@@ -50,7 +50,6 @@ class EpicsController
         $groupedIssues = array(
             'shipped' => array(),
             'release' => array(),
-            'cancelled-progress' => array(),
             'progress' => array(),
             'delayed' => array(),
             'cancelled' => array(),
@@ -73,7 +72,7 @@ class EpicsController
             $rank = (int) $issue['fields']['customfield_10250'];
             $team = $this->config['teams'][$component]['key'];
             $icon = $this->config['teams'][$component]['id'] . '.png';
-            $sched = in_array($status, array('In Progress', 'Closed')) ? date('F') : $status;
+            $sched = date('F');
 
             $skip = false;
             // logic for each issue group
@@ -140,7 +139,7 @@ class EpicsController
                             }
                         }
                         if ($action['items'][0]['toString'] === 'In Progress' && $group === 'cancelled') {
-                            $group = 'cancelled-progress';
+                            $group = 'cancelled';
                         }
                     }
                     $order = 0;
