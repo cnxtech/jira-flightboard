@@ -72,7 +72,8 @@ class EpicsController
             $rank = (int) $issue['fields']['customfield_10250'];
             $team = $this->config['teams'][$component]['key'];
             $icon = $this->config['teams'][$component]['id'] . '.png';
-            $sched = in_array($status, array('In Progress', 'Closed', 'Resolved', 'Open')) ? date('F') : $status;
+            $version = array_pop($issue['fields']['versions']);
+            $sched = empty($version) ? '' : array_shift(explode(' ', $version['name']));
 
             $skip = false;
             // logic for each issue group
