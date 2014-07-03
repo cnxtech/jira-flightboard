@@ -43,7 +43,7 @@ td {
 .status-shipped {
     color: limegreen;
 }
-.status-release {
+.notime-release {
     color: darkgreen;
 }
 .status-delayed {

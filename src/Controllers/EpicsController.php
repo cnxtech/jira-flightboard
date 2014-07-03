@@ -115,7 +115,14 @@ class EpicsController
                     $statusToShow = 'Awaiting Release';
                     $group = 'release';
                     $statusId = $group;
-                    $order = 0;
+                    $changeLog = $this->getChangeLog($issue['id'], $status);
+                    foreach ($changeLog as $action) {
+                        if ($action['items'][0]['toString'] === 'Resolved') {
+                            $since = DateFormatter::getAge($action['created']);
+                            $order = strtotime($action['created']);
+                            break;
+                        }
+                    }
                     break;
                 case "Closed":
                     if (!($issue['fields']['resolution']['name'] == 'Done'
@@ -167,7 +174,10 @@ class EpicsController
                 'icon' => $icon
             );
 
-            if ($status === 'In Progress') {
+            if ($status === 'In Progress' || $status === 'Resolved') {
+                if ($status === 'Resolved') {
+                    $component = 0;
+                }
                 if ($statusId !== 'delayed') {
                     $ticket['since'] = $since;
                 }
@@ -187,7 +197,7 @@ class EpicsController
         // order issues
         $issues = array();
         foreach (array_keys($groupedIssues) as $group) {
-            if ($group === 'progress') {
+            if ($group === 'progress' || $group == 'release') {
                 $issuesByTime = array();
                 foreach (array_keys($groupedIssues[$group]) as $title) {
                     ksort($groupedIssues[$group][$title]);
