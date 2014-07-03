@@ -46,6 +46,9 @@ td {
 .notime-release {
     color: darkgreen;
 }
+.status-release {
+    color: darkgreen;
+}
 .status-delayed {
     color: yellow;
 }

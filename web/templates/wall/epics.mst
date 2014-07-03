@@ -20,7 +20,7 @@
         <td><div class="summary">{{ summary }}</div></td>
         <td>{{ key }}</td>
         {{ #since }}
-        <td><span class="notime-{{ status }}">{{ statusMessage }}</span> - <span class="status-{{ status }}">{{ since }}</span></td>
+        <td><span class="notime-{{ status }}">{{ statusMessage }} - </span><span class="status-{{ status }}">{{ since }}</span></td>
         {{ /since }}
         {{ ^since }}
         <td class="status-{{ status }}">{{ statusMessage }}</td>
