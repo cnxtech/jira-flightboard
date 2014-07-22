@@ -36,6 +36,7 @@ class EpicsController
     {
         // get issues from jira
         $status = $this->config['epics']['status'];
+        $status[] = date('F');
         $status[] = date('F', strtotime('+1 month')); // adds the month as another status
         try {
             $rawIssues = $this->dao->getByStatus(
