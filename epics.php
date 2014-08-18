@@ -2,4 +2,5 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
-echo $app['twig']->render('epics.twig');
+$page = isset($_GET['page']) ? (int)  $_GET : 0;
+echo $app['twig']->render('epics.twig', array('page' => $page));

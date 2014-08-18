@@ -19,7 +19,7 @@
             {% if not interval is defined %}
                 {% set interval = 5000000 %}
             {% endif %}
-            load("{{ type }}", {{ interval }});
+            load("{{ type }}", {{ interval }}, {{ page }});
         </script>
         {% block js %}
         {% endblock %}
