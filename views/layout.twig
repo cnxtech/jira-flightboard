@@ -19,7 +19,7 @@
             {% if not interval is defined %}
                 {% set interval = 5000000 %}
             {% endif %}
-            load("{{ type }}", {{ interval }} {% if page is defined %}, {{ page }} {% endif %});
+            load("{{ type }}", {{ interval }} {% if page is defined %}, {{ page }} {% endif %} {% if numEntries is not empty %}, {{ numEntries }} {% endif %});
         </script>
         {% block js %}
         {% endblock %}
