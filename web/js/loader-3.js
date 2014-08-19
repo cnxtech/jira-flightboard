@@ -1,26 +1,26 @@
-function load(type, interval, page, numEntries) {
+function load(type, interval, start, end) {
     var templateType = $(window).width() < 500 ? "mobile" : "wall";
     var templatePath = "./web/templates/" + templateType + "/" + type + ".mst";
-    var page = typeof(page) ==='undefined' ? 0 : page;
-    var numEntries = typeof(numEntries) ==='undefined' ? null : numEntries;
+    var start = typeof(start) ==='undefined' ? 0 : start;
+    var end = typeof(end) ==='undefined' ? null : end;
 
     $.get(templatePath, function (templateContent) {
-        updateTemplate(type, templateContent, page, numEntries);
+        updateTemplate(type, templateContent, start, end);
         setInterval(
             function() {
-                updateTemplate(type, templateContent, page, numEntries);
+                updateTemplate(type, templateContent, start, end);
             },
             interval
         );
     });
 }
 
-function updateTemplate(type, templateContent, page, numEntries) {
+function updateTemplate(type, templateContent, start, end) {
     var doc = document.documentElement;
     var top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
-    var numEntries = numEntries == null ? "" : "&numEntries=" + numEntries;
+    var end = end == null ? "" : "&end=" + end;
 
-    $("#content").load("./api/" + type + ".php?page=" + page + numEntries, function (response) {
+    $("#content").load("./api/" + type + ".php?start=" + start + end, function (response) {
         var data = JSON.parse(response);
         var content = Mustache.render(templateContent, data);
         $(this).html(content);

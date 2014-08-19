@@ -33,10 +33,10 @@ class EpicsController
     }
 
     /**
-     * @param int $page
-     * @param int $issuesPerPage
+     * @param int $start
+     * @param int $end
      */
-    public function get($page, $issuesPerPage)
+    public function get($start, $end)
     {
         // get issues from jira
         $status = $this->config['epics']['status'];
@@ -247,8 +247,10 @@ class EpicsController
             }
         }
 
-        $issuesPerPage = empty($issuesPerPage) ? $this->config['epicsPerPage'] : $issuesPerPage;
-        $issues = array_slice($issues, $page * $issuesPerPage, $issuesPerPage);
+        $issues = $end === null
+            ? array_slice($issues, $start - 1)
+            : array_slice($issues, $start - 1, $end - $start + 1);
+
         return json_encode(array('issues' => $issues));
     }
 

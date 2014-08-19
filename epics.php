@@ -2,6 +2,6 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
-$page = isset($_GET['page']) ? (int)  $_GET['page'] : 0;
-$numEntries = isset($_GET['numEntries']) ? (int)  $_GET['numEntries'] : null;
-echo $app['twig']->render('epics.twig', array('page' => $page, 'numEntries' => $numEntries));
+$start = isset($_GET['start']) ? (int)  $_GET['start'] : 1;
+$end = isset($_GET['end']) ? (int)  $_GET['end'] : null;
+echo $app['twig']->render('epics.twig', array('start' => $start, 'end' => $end));

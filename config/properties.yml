@@ -69,5 +69,3 @@ teams:
   IT Ops:
     key: OPS
     id: 10070
-
-epicsPerPage: 48
