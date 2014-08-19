@@ -160,7 +160,7 @@ class EpicsController
                 default:
                     $group = 'waiting';
                     $statusId = $group;
-                    $order = 0;
+                    $order = $rank;
                     $statusToShow = '';
                     break;
             }
@@ -194,6 +194,9 @@ class EpicsController
                     $groupedIssues[$group][$summary][$order] = array();
                 }
                 $groupedIssues[$group][$summary][$order][] = $ticket;
+            } else if ($group === 'waiting') {
+                $month = date('n', strtotime($status));
+                $groupedIssues[$group][$component][$month][$rank] = $ticket;
             } else {
                 $groupedIssues[$group][$component][$rank] = $ticket;
             }
@@ -220,6 +223,16 @@ class EpicsController
 
                 foreach ($issuesByTime as $issuesInTimestamp) {
                     $issues = array_merge($issues, $issuesInTimestamp);
+                }
+            } else if ($group === 'waiting') {
+                foreach (array_keys($groupedIssues[$group]) as $team) {
+                    ksort($groupedIssues[$group][$team]);
+                    foreach (array_keys($groupedIssues[$group][$team]) as $month) {
+                        ksort($groupedIssues[$group][$team][$month]);
+                        foreach ($groupedIssues[$group][$team][$month] as $issue) {
+                            $issues[] = $issue;
+                        }
+                    }
                 }
             } else {
                 while(!empty($groupedIssues[$group])) {
