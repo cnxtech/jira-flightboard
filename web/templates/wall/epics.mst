@@ -14,13 +14,13 @@
         <td>Status</td>
     </tr>
 {{ #issues }}
-    <tr>
+    <tr {{ #separation }} class="separation"{{ /separation }}>
         <td class="image"><img src="./web/img/{{ icon }}"/></td>
         <td>{{ sched }}</td>
         <td><div class="summary">{{ summary }}</div></td>
         <td>{{ key }}</td>
         {{ #since }}
-        <td><span class="notime-{{ status }}">{{ statusMessage }}</span><span class="status-{{ status }}">{{ since }}</span></td>
+        <td><span class="notime-{{ status }} status-{{ status }}">{{ statusMessage }}</span><span class="status-{{ timeClass }}">{{ since }}</span></td>
         {{ /since }}
         {{ ^since }}
         <td class="status-{{ status }}">{{ statusMessage }}</td>

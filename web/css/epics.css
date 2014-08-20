@@ -55,3 +55,6 @@ td {
 .summary {
     color: #CCB36E;
 }
+.separation td {
+    border-bottom: 5px solid grey;
+}

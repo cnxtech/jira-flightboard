@@ -86,6 +86,7 @@ class EpicsController
                 case "In Progress":
                     $statusToShow = "In flight - ";
                     $group = 'progress';
+                    $timeClass = 'progress';
                     $statusId = 'progress';
                     $closed = false;
                     $changeLog = $this->getChangeLog($issue['id'], $status);
@@ -99,8 +100,10 @@ class EpicsController
                     if (preg_match('/^([0-9]+)d/', $since, $matches)) {
                         if ($matches[1] >= 45) {
                             $statusId = 'progress-red';
+                            $timeClass = 'progress-red';
                         } elseif ($matches[1] >= 30) {
                             $statusId = 'progress-yellow';
+                            $timeClass = 'progress-yellow';
                         }
                     }
                     break;
@@ -120,6 +123,7 @@ class EpicsController
                     $statusToShow = "";
                     $group = 'release';
                     $statusId = 'progress';
+                    $timeClass = 'progress';
                     $changeLog = $this->getChangeLog($issue['id'], $status);
                     foreach ($changeLog as $action) {
                         if ($action['items'][0]['toString'] === 'Resolved') {
@@ -131,11 +135,20 @@ class EpicsController
                     if (preg_match('/^([0-9]+)d/', $since, $matches)) {
                         if ($matches[1] >= 45) {
                             $statusId = 'progress-red';
+                            $since = 'Awaiting Release - ' . $since;
+                            $timeClass = 'progress-red';
                         } elseif ($matches[1] >= 30) {
                             $statusId = 'progress-yellow';
+                            $since = 'Awaiting Release - ' . $since;
+                            $timeClass = 'progress-yellow';
+                        } else {
+                            $statusToShow = "Awaiting Release - ";
+                            $statusId = "release";
                         }
+                    } else {
+                        $statusToShow = "Awaiting Release - ";
+                        $statusId = "release";
                     }
-                    $since = 'Awaiting Release - ' . $since;
                     break;
                 case "Closed":
                     if (!($issue['fields']['resolution']['name'] == 'Done'
@@ -194,6 +207,7 @@ class EpicsController
                 }
                 if ($statusId !== 'delayed') {
                     $ticket['since'] = $since;
+                    $ticket['timeClass'] = $timeClass;
                 }
 
                 if (!isset($groupedIssues[$group][$summary])) {
@@ -206,6 +220,7 @@ class EpicsController
             } else if ($group === 'waiting' || $status === 'In Progress') {
                 if ($status === 'In Progress') {
                     $ticket['since'] = $since;
+                    $ticket['timeClass'] = $timeClass;
                     $month = 1;
                 } else {
                     $month = date('n', strtotime($status));
@@ -260,6 +275,7 @@ class EpicsController
                             unset($groupedIssues[$group][$team]);
                         }
                     }
+                    if ($group == 'waiting') $issues[count($issues) - 1]['separation'] = true;
                 }
             } else {
                 while(!empty($groupedIssues[$group])) {
