@@ -275,7 +275,7 @@ class EpicsController
                             unset($groupedIssues[$group][$team]);
                         }
                     }
-                    if ($group == 'waiting') $issues[count($issues) - 1]['separation'] = true;
+                    $issues[count($issues) - 1]['separation'] = true;
                 }
             } else {
                 while(!empty($groupedIssues[$group])) {
