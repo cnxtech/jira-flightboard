@@ -84,7 +84,7 @@ class EpicsController
             // logic for each issue group
             switch($status) {
                 case "In Progress":
-                    $statusToShow = "In flight";
+                    $statusToShow = "In flight - ";
                     $group = 'progress';
                     $statusId = 'progress';
                     $closed = false;
@@ -117,7 +117,7 @@ class EpicsController
                     }
                     break;
                 case "Resolved":
-                    $statusToShow = 'Awaiting Release';
+                    $statusToShow = "";
                     $group = 'release';
                     $statusId = 'progress';
                     $changeLog = $this->getChangeLog($issue['id'], $status);
@@ -135,6 +135,7 @@ class EpicsController
                             $statusId = 'progress-yellow';
                         }
                     }
+                    $since = 'Awaiting Release - ' . $since;
                     break;
                 case "Closed":
                     if (!($issue['fields']['resolution']['name'] == 'Done'
