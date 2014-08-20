@@ -225,12 +225,22 @@ class EpicsController
                     $issues = array_merge($issues, $issuesInTimestamp);
                 }
             } else if ($group === 'waiting') {
-                foreach (array_keys($groupedIssues[$group]) as $team) {
-                    ksort($groupedIssues[$group][$team]);
-                    foreach (array_keys($groupedIssues[$group][$team]) as $month) {
-                        ksort($groupedIssues[$group][$team][$month]);
-                        foreach ($groupedIssues[$group][$team][$month] as $issue) {
-                            $issues[] = $issue;
+                while (!empty($groupedIssues[$group])) {
+                    foreach (array_keys($groupedIssues[$group]) as $team) {
+                        ksort($groupedIssues[$group][$team]);
+                        foreach (array_keys($groupedIssues[$group][$team]) as $month) {
+                            ksort($groupedIssues[$group][$team][$month]);
+                            foreach ($groupedIssues[$group][$team][$month] as $issue) {
+                                $issues[] = array_shift($groupedIssues[$group][$team][$month]);
+                                break;
+                            }
+                            if (empty($groupedIssues[$group][$team][$month])) {
+                                unset($groupedIssues[$group][$team][$month]);
+                            }
+                            break;
+                        }
+                        if (empty($groupedIssues[$group][$team])) {
+                            unset($groupedIssues[$group][$team]);
                         }
                     }
                 }
