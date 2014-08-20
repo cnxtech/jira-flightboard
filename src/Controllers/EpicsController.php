@@ -119,13 +119,20 @@ class EpicsController
                 case "Resolved":
                     $statusToShow = 'Awaiting Release';
                     $group = 'release';
-                    $statusId = $group;
+                    $statusId = 'progress';
                     $changeLog = $this->getChangeLog($issue['id'], $status);
                     foreach ($changeLog as $action) {
                         if ($action['items'][0]['toString'] === 'Resolved') {
                             $since = DateFormatter::getAge($action['created']);
                             $order = strtotime($action['created']);
                             break;
+                        }
+                    }
+                    if (preg_match('/^([0-9]+)d/', $since, $matches)) {
+                        if ($matches[1] >= 45) {
+                            $statusId = 'progress-red';
+                        } elseif ($matches[1] >= 30) {
+                            $statusId = 'progress-yellow';
                         }
                     }
                     break;
