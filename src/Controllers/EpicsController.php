@@ -179,7 +179,8 @@ class EpicsController
                 'icon' => $icon
             );
 
-            if ($status === 'In Progress' || $status === 'Resolved') {
+            if ($status === 'Resolved') {
+            //if ($status === 'In Progress' || $status === 'Resolved') {
                 if ($status === 'Resolved') {
                     $component = 0;
                 }
@@ -194,8 +195,14 @@ class EpicsController
                     $groupedIssues[$group][$summary][$order] = array();
                 }
                 $groupedIssues[$group][$summary][$order][] = $ticket;
-            } else if ($group === 'waiting') {
-                $month = date('n', strtotime($status));
+            } else if ($group === 'waiting' || $status === 'In Progress') {
+                if ($status === 'In Progress') {
+                    $ticket['since'] = $since;
+                    $month = 1;
+                } else {
+                    $month = date('n', strtotime($status));
+                }
+
                 $groupedIssues[$group][$component][$month][$rank] = $ticket;
             } else {
                 $groupedIssues[$group][$component][$rank] = $ticket;
@@ -205,7 +212,8 @@ class EpicsController
         // order issues
         $issues = array();
         foreach (array_keys($groupedIssues) as $group) {
-            if ($group === 'progress' || $group == 'release') {
+            if ($group == 'release') {
+            //if ($group === 'progress' || $group == 'release') {
                 $issuesByTime = array();
                 foreach (array_keys($groupedIssues[$group]) as $title) {
                     ksort($groupedIssues[$group][$title]);
@@ -224,7 +232,8 @@ class EpicsController
                 foreach ($issuesByTime as $issuesInTimestamp) {
                     $issues = array_merge($issues, $issuesInTimestamp);
                 }
-            } else if ($group === 'waiting') {
+            //} else if ($group === 'waiting') {
+            } else if ($group === 'waiting' || $group === 'progress') {
                 while (!empty($groupedIssues[$group])) {
                     foreach (array_keys($groupedIssues[$group]) as $team) {
                         ksort($groupedIssues[$group][$team]);
