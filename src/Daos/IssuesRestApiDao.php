@@ -78,4 +78,16 @@ class IssuesRestApiDao extends RestApiDao implements IssuesDao
             ? $response['changelog']['histories']
             : array();
     }
+
+    /**
+     * @param istring $epicKey
+     * @return array
+     */
+    public function getIssuesByEpic($epicKey)
+    {
+        $query = sprintf('search?jql="Epic Link"=%s &maxResults=-1', $epicKey);
+        $query = str_replace(' ', '+', $query);
+
+        return parent::query($query);
+    }
 }

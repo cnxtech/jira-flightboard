@@ -82,6 +82,10 @@ class EpicsController
 
             $skip = false;
             // logic for each issue group
+
+            //$issues = $this->dao->getIssuesByEpic($issue['key']);
+            //var_dump($issues);die;
+            
             switch($status) {
                 case "In Progress":
                     $statusToShow = "In flight - ";
@@ -200,8 +204,8 @@ class EpicsController
                 'icon' => $icon
             );
 
-            if ($status === 'Resolved') {
-            //if ($status === 'In Progress' || $status === 'Resolved') {
+            //if ($status === 'Resolved') {
+            if ($status === 'In Progress' || $status === 'Resolved') {
                 if ($status === 'Resolved') {
                     $component = 0;
                 }
@@ -235,8 +239,8 @@ class EpicsController
         // order issues
         $issues = array();
         foreach (array_keys($groupedIssues) as $group) {
-            if ($group == 'release') {
-            //if ($group === 'progress' || $group == 'release') {
+            //if ($group == 'release') {
+            if ($group === 'progress' || $group == 'release') {
                 $issuesByTime = array();
                 foreach (array_keys($groupedIssues[$group]) as $title) {
                     ksort($groupedIssues[$group][$title]);
@@ -255,8 +259,8 @@ class EpicsController
                 foreach ($issuesByTime as $issuesInTimestamp) {
                     $issues = array_merge($issues, $issuesInTimestamp);
                 }
-            //} else if ($group === 'waiting') {
-            } else if ($group === 'waiting' || $group === 'progress') {
+            } else if ($group === 'waiting') {
+            //} else if ($group === 'waiting' || $group === 'progress') {
                 while (!empty($groupedIssues[$group])) {
                     foreach (array_keys($groupedIssues[$group]) as $team) {
                         ksort($groupedIssues[$group][$team]);

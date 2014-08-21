@@ -42,4 +42,10 @@ interface IssuesDao
      * @return array
      */
     public function getChangeLog($issueId);
+
+    /**
+     * @param int $issueId
+     * @return array
+     */
+    public function getIssuesByEpic($epicId);
 }
