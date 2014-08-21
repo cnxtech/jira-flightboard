@@ -123,7 +123,7 @@ class EpicsController
                     $statusToShow = "";
                     $group = 'release';
                     $statusId = 'progress';
-                    $timeClass = 'progress';
+                    $timeClass = 'release';
                     $changeLog = $this->getChangeLog($issue['id'], $status);
                     foreach ($changeLog as $action) {
                         if ($action['items'][0]['toString'] === 'Resolved') {
