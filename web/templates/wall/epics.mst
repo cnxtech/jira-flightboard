@@ -15,16 +15,11 @@
     </tr>
 {{ #issues }}
     <tr {{ #separation }} class="separation"{{ /separation }}>
-        <td class="image"><img src="./web/img/{{ icon }}"/></td>
-        <td>{{ sched }}</td>
+        <td class="image"><img src="./web/img/{{ icon }}.png"/></td>
+        <td>{{ scheduled }}</td>
         <td><div class="summary">{{ summary }}</div></td>
         <td>{{ key }}</td>
-        {{ #since }}
-        <td><span class="notime-{{ status }} status-{{ status }}">{{ statusMessage }}</span><span class="status-{{ timeClass }}">{{ since }}</span></td>
-        {{ /since }}
-        {{ ^since }}
-        <td class="status-{{ status }}">{{ statusMessage }}</td>
-        {{ /since }}
+        <td><span style="color: {{ styles.status }}">{{ statusLabel }}</span>{{ #time }}<span style="color:{{ styles.time }}">- {{ time }}</span>{{ /time }}</td>
     </tr>
 {{ /issues }}
 </table>

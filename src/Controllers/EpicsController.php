@@ -7,20 +7,20 @@
 
 namespace JiraDashboard\Controllers;
 
+use Exception;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\Behat\Gherkin\Filter\LineRangeFilterTest;
 use JiraDashboard\Utils\DateFormatter;
 use JiraDashboard\Daos\IssuesRestApiDao;
 
-/**
- * @package JiraDashboard\Controllers
- */
-
 class EpicsController
 {
     private $dao;
     private $config;
+    private $orderedIssuesMap;
+    private $sttaes = array();
+    private $summaries;
 
     public function __construct(Application $app)
     {
@@ -30,6 +30,32 @@ class EpicsController
             $this->config['jira_api']['endpoint'],
             $this->config['jira_api']['token']
         );
+
+        foreach ($this->config['epics']['fields'] as $field => $properties) {
+            if ($field === 'delayed') {
+                continue;
+            }
+
+            $statusKey = isset($properties['states']) ? $properties['states'] : 'default';
+
+            $states = is_array($statusKey) ? $statusKey : array($statusKey);
+            foreach ($states as $state) {
+                if (!isset($this->states[$state])) {
+                    $this->states[$state] = array();
+                }
+
+                if (isset($properties['resolution'])) {
+                    $resolutions = is_array($properties['resolution'])
+                        ?  $properties['resolution']
+                        : array($properties['resolution']);
+                    foreach ($resolutions as $resolution) {
+                        $this->states[$state][$resolution] = $field;
+                    }
+                } else {
+                    $this->states[$state][] = $field;
+                }
+            }
+        }
     }
 
     /**
@@ -38,282 +64,221 @@ class EpicsController
      */
     public function get($start, $end)
     {
-        // get issues from jira
-        $status = $this->config['epics']['status'];
-        $status[] = date('F');
-        $status[] = date('F', strtotime('+1 month')); // adds the month as another status
         try {
-            $rawIssues = $this->dao->getByStatus(
-                $this->config['epics']['project'],
-                $status
-            );
-        } catch (\Exception $e) {
+            $rawIssues = $this->getRawIssuesFromJira();
+        } catch (Exception $e) {
             return $app->json(array('error' => 'Could not get issues from Jira.'));
         }
 
-        // set up initial issues array ready to be ordered
-        $groupedIssues = array(
-            'shipped' => array(),
-            'release' => array(),
-            'progress' => array(),
-            'delayed' => array(),
-            'cancelled' => array(),
-            'waiting' => array()
-        );
+        $this->prepareOrderedMap();
+
+        foreach ($rawIssues['issues'] as $rawIssue) {
+            $issue = $this->extractIssueFromRawIssue($rawIssue);
+            if ($issue !== null) $this->addIssueToOrderedMap($issue);
+        }
+
+        $issueList = $this->getListFromMap();
+
+        $issueListSlice = $end === null
+            ? array_slice($issueList, $start - 1)
+            : array_slice($issueList, $start - 1, $end - $start + 1);
+
+        return json_encode(array('issues' => $issueListSlice));
+    }
+
+    /**
+     * @return array
+     */
+    private function getRawIssuesFromJira()
+    {
+        $status = $this->config['epics']['status'];
+        $status[] = date('F');
+        $status[] = date('F', strtotime('+1 month'));
+
+        return $this->dao->getByStatus($this->config['epics']['project'], $status);
+    }
+
+    private function prepareOrderedMap()
+    {
+        $this->orderedIssuesMap = array();
+
+        $teams = array();
         foreach (array_keys($this->config['teams']) as $team) {
-            foreach (array_keys($groupedIssues) as $issueGroup) {
-                $groupedIssues[$issueGroup][$team] = array();
-            }
+            $teams[$team] = array();
         }
 
-        // iterate issues to construct ordered array
-        foreach ($rawIssues['issues'] as $issue) {
-            // get basic info from issue array
-            $summary = $issue['fields']['summary'];
-            $component = $issue['fields']['components'][0]['name'];
-            $keyParts = explode('-', $issue['key']);
-            $issueKey = $keyParts[1];
-            $status = $issue['fields']['status']['name'];
-            $rank = (int) $issue['fields']['customfield_10250'];
-            $team = $this->config['teams'][$component]['key'];
-            $icon = $this->config['teams'][$component]['id'] . '.png';
-            $version = array_pop($issue['fields']['versions']);
-            $sched = empty($version) ? '' : array_shift(explode(' ', $version['name']));
+        foreach ($this->config['epics']['fields'] as $field => $properties) {
+            if ($properties['sorting'] == 'time') {
+                $this->orderedIssuesMap[$field] = array();;
+            } else if ($properties['sorting'] == 'team-group') {
+                $this->orderedIssuesMap[$field] = $teams;
+            }
+        }
+    }
 
-            $skip = false;
-            // logic for each issue group
+    /**
+     * @param array $rawIssue
+     * @return array
+     */
+    private function extractIssueFromRawIssue(array $rawIssue)
+    {
+        // get basic info
+        $component = $rawIssue['fields']['components'][0]['name'];
+        $version = array_pop($rawIssue['fields']['versions']);
+        $status = $rawIssue['fields']['status']['name'];
+        $resolution = $rawIssue['fields']['resolution']['name'];
 
-            //$issues = $this->dao->getIssuesByEpic($issue['key']);
-            //var_dump($issues);die;
-            
-            switch($status) {
-                case "In Progress":
-                    $statusToShow = "In flight - ";
-                    $group = 'progress';
-                    $timeClass = 'progress';
-                    $statusId = 'progress';
-                    $closed = false;
-                    $changeLog = $this->getChangeLog($issue['id'], $status);
-                    foreach ($changeLog as $action) {
-                        if ($action['items'][0]['toString'] === 'In Progress') {
-                            $since = DateFormatter::getAge($action['created']);
-                            $order = strtotime($action['created']);
-                            break;
-                        }
+        $issue = array(
+            'key' => $this->config['teams'][$component]['key'] . '-' . array_pop(explode('-', $rawIssue['key'])),
+            'scheduled' => array_shift(explode(' ', $version['name'])),
+            'summary' => $rawIssue['fields']['summary'],
+            'project' => $this->config['teams'][$component]['key'],
+            'icon' => $this->config['teams'][$component]['id'],
+            'blocking' => array(),
+            'rank' => (int) $rawIssue['fields']['customfield_10250'],
+            'month' => date('m', strtotime($status)),
+            'component' => $rawIssue['fields']['components'][0]['name']
+        );
+
+        // get status
+        $stateKey = isset($this->states[$status]) ? $status : 'default';
+        $issue['status'] = isset($this->states[$stateKey][$resolution])
+            ? $this->states[$stateKey][$resolution]
+            : $this->states[$stateKey][0];
+
+        // check if delayed
+        $isDelayed = function($changelog, $status) {
+            foreach ($changelog as $actions) {
+                if (!is_array($actions)) continue;
+                foreach ($actions as $action)
+                    if ($action['items'][0]['toString'] == 'In Progress') return true;
+            }
+        };
+        if ($status == 'Open' && $isDelayed($rawIssue['changelog'], $status)) {
+            $issue['status'] = 'delayed';
+        } else if ($status == 'Open') {
+            return null;
+        }
+
+        $config = $this->config['epics']['fields'][$issue['status']];
+        $issue['statusLabel'] = $config['label'];
+
+        // get since
+        if ($config['display']['since'] || isset($config['limit'])) {
+            foreach ($rawIssue['changelog'] as $actions) {
+                if (!is_array($actions)) continue;
+                foreach ($actions as $action) {
+                    if ($action['items'][0]['toString'] == $status) {
+                        $issue['since'] = $action['created'];
+                        break;
                     }
-                    if (preg_match('/^([0-9]+)d/', $since, $matches)) {
-                        if ($matches[1] >= 45) {
-                            $statusId = 'progress-red';
-                            $timeClass = 'progress-red';
-                        } elseif ($matches[1] >= 30) {
-                            $statusId = 'progress-yellow';
-                            $timeClass = 'progress-yellow';
-                        }
-                    }
-                    break;
-                case "Open":
-                    $statusToShow = "Delayed";
-                    $group = 'delayed';
-                    $statusId = $group;
-                    $skip = true;
-                    $changeLog = $this->getChangeLog($issue['id'], $status);
-                    foreach ($changeLog as $action) {
-                        if ($action['items'][0]['toString'] === 'In Progress') {
-                            $skip = false;
-                        }
-                    }
-                    break;
-                case "Resolved":
-                    $statusToShow = "";
-                    $group = 'release';
-                    $statusId = 'progress';
-                    $timeClass = 'release';
-                    $changeLog = $this->getChangeLog($issue['id'], $status);
-                    foreach ($changeLog as $action) {
-                        if ($action['items'][0]['toString'] === 'Resolved') {
-                            $since = DateFormatter::getAge($action['created']);
-                            $order = strtotime($action['created']);
-                            break;
-                        }
-                    }
-                    if (preg_match('/^([0-9]+)d/', $since, $matches)) {
-                        if ($matches[1] >= 45) {
-                            $statusId = 'progress-red';
-                            $since = 'Awaiting Release - ' . $since;
-                            $timeClass = 'progress-red';
-                        } elseif ($matches[1] >= 30) {
-                            $statusId = 'progress-yellow';
-                            $since = 'Awaiting Release - ' . $since;
-                            $timeClass = 'progress-yellow';
-                        } else {
-                            $statusToShow = "Awaiting Release - ";
-                            $statusId = "release";
-                        }
-                    } else {
-                        $statusToShow = "Awaiting Release - ";
-                        $statusId = "release";
-                    }
-                    break;
-                case "Closed":
-                    if (!($issue['fields']['resolution']['name'] == 'Done'
-                        || $issue['fields']['resolution']['name'] == 'Completed'
-                        || $issue['fields']['resolution']['name'] == 'Fixed')) {
-                        $statusToShow = 'Cancelled';
-                        $group = 'cancelled';
-                        $statusId = $group;
-                    } else {
-                        $statusToShow = 'Shipped';
-                        $group = 'shipped';
-                        $statusId = $group;
-                    }
-                    $changeLog = $this->getChangeLog($issue['id'], $status);
-                    foreach ($changeLog as $action) {
-                        if ($action['items'][0]['toString'] === 'Closed') {
-                            $since = DateFormatter::getAge($action['created']);
-                            preg_match('/([0-9]+)d/', $since, $matches);
-                            if (isset($matches[1]) &&  $matches[1] > 7) {
-                                $skip = true;
-                                break;
-                            }
-                        }
-                        if ($action['items'][0]['toString'] === 'In Progress' && $group === 'cancelled') {
-                            $group = 'cancelled';
-                        }
-                    }
-                    $order = 0;
-                    break;
-                default:
-                    $group = 'waiting';
-                    $statusId = $group;
-                    $order = $rank;
-                    $statusToShow = '';
-                    break;
+                }
             }
 
-            if ($skip) {
-                continue;
+            if (isset($config['limit']) && strtotime($config['limit']) > strtotime($issue['since'])) {
+                return null;
             }
 
-            // add issue in the correct position
-            $ticket = array(
-                'key' => $team . '-' . $keyParts[1],
-                'summary' => $summary,
-                'sched' => $sched,
-                'status' => $statusId,
-                'statusMessage' => $statusToShow,
-                'icon' => $icon
-            );
+            if ($config['display']['since'])  $issue['time'] = DateFormatter::getAge($issue['since']);
+        } else {
+            $issue['since'] = $rawIssue['fields']['created'];
+        }
 
-            //if ($status === 'Resolved') {
-            if ($status === 'In Progress' || $status === 'Resolved') {
-                if ($status === 'Resolved') {
-                    $component = 0;
-                }
-                if ($statusId !== 'delayed') {
-                    $ticket['since'] = $since;
-                    $ticket['timeClass'] = $timeClass;
-                }
+        // get styles
+        $issueStyles = function ($issue, $config) {
+            $styles = array();
 
-                if (!isset($groupedIssues[$group][$summary])) {
-                    $groupedIssues[$group][$summary] = array();
-                }
-                if (!isset($groupedIssues[$group][$summary][$order])) {
-                    $groupedIssues[$group][$summary][$order] = array();
-                }
-                $groupedIssues[$group][$summary][$order][] = $ticket;
-            } else if ($group === 'waiting' || $status === 'In Progress') {
-                if ($status === 'In Progress') {
-                    $ticket['since'] = $since;
-                    $ticket['timeClass'] = $timeClass;
-                    $month = 1;
-                } else {
-                    $month = date('n', strtotime($status));
-                }
+            if (isset($config['time'])) {
+                $timeColor = function($since, $config) {
+                    foreach ($config as $time => $color)
+                        if (strtotime($time) && strtotime($time) > strtotime($since))
+                            return $color;
+                    return $config['normal'];
+                };
 
-                $groupedIssues[$group][$component][$month][$rank] = $ticket;
+                $styles['status'] = $config['states_color'] === 'time'
+                    ? $timeColor($issue['since'], $config['time'])
+                    : $config['states_caolor'];
+
+                if (isset($config['time_color'])) {
+                    $styles['time'] = $config['time_color'] === 'time'
+                        ? $timeColor($issue['since'], $config['time'])
+                        : $config['states_color'];
+                }
             } else {
-                $groupedIssues[$group][$component][$rank] = $ticket;
+                $styles['status'] = $config['states_color'];
             }
+
+            return $styles;
+        };
+        $issue['styles'] = $issueStyles($issue, $config['display']);
+
+        return $issue;
+    }
+
+    /**
+     * param array $issue
+     */
+    private function addIssueToOrderedMap(array $issue)
+    {
+        $sorting = $this->config['epics']['fields'][$issue['status']]['sorting'];
+
+        if ($sorting === 'time') {
+            $time = strtotime($issue['since']);
+            if (!isset($this->orderedIssuesMap[$issue['status']][$time]))
+                $this->orderedIssuesMap[$issue['status']][$time] = array();
+
+            $this->orderedIssuesMap[$issue['status']][$time][] = $issue;
+        } else if ($sorting === 'team-group') {
+            if (!isset($this->orderedIssuesMap[$issue['status']][$issue['component']][$issue['month']])) {
+                $this->orderedIssuesMap[$issue['status']][$issue['component']][$issue['month']] = array();
+                ksort($this->orderedIssuesMap[$issue['status']][$issue['component']]);
+            }
+            if (!isset($this->orderedIssuesMap[$issue['status']][$issue['component']][$issue['month']][$issue['rank']]))
+                $this->orderedIssuesMap[$issue['status']][$issue['component']][$issue['month']][$issue['rank']] = array();
+
+            $this->orderedIssuesMap[$issue['status']][$issue['component']][$issue['month']][$issue['rank']][] = $issue;
         }
+    }
 
-        // order issues
+    /**
+     * @return array
+     */
+    private function getListFromMap()
+    {
         $issues = array();
-        foreach (array_keys($groupedIssues) as $group) {
-            //if ($group == 'release') {
-            if ($group === 'progress' || $group == 'release') {
-                $issuesByTime = array();
-                foreach (array_keys($groupedIssues[$group]) as $title) {
-                    ksort($groupedIssues[$group][$title]);
-                    reset($groupedIssues[$group][$title]);
-                    $oldestTime = key($groupedIssues[$group][$title]);
-                    if (!isset($issuesByTime[$oldestTime])) {
-                        $issuesByTime[$oldestTime] = array();
-                    }
-                    foreach ($groupedIssues[$group][$title] as $time => $issuesGroupedByTitle) {
-                        ksort($issuesGroupedByTitle);
-                        $issuesByTime[$oldestTime] = array_merge($issuesByTime[$oldestTime], $issuesGroupedByTitle);
-                    }
-                    ksort($issuesByTime);
-                }
 
-                foreach ($issuesByTime as $issuesInTimestamp) {
-                    $issues = array_merge($issues, $issuesInTimestamp);
-                }
-            } else if ($group === 'waiting') {
-            //} else if ($group === 'waiting' || $group === 'progress') {
-                while (!empty($groupedIssues[$group])) {
-                    foreach (array_keys($groupedIssues[$group]) as $team) {
-                        ksort($groupedIssues[$group][$team]);
-                        foreach (array_keys($groupedIssues[$group][$team]) as $month) {
-                            ksort($groupedIssues[$group][$team][$month]);
-                            foreach ($groupedIssues[$group][$team][$month] as $issue) {
-                                $issues[] = array_shift($groupedIssues[$group][$team][$month]);
+        foreach ($this->orderedIssuesMap as $type => $byStateIssues) {
+            if ($this->config['epics']['fields'][$type]['sorting'] == 'time') {
+                ksort($byStateIssues);
+                foreach ($byStateIssues as $key => $group)
+                    if ($this->config['epics']['fields'][$type]['sorting'] == 'time')
+                        foreach ($group as $issue)
+                            $issues[] = $issue;
+            } else {
+                while (!empty($this->orderedIssuesMap[$type])) {
+                    foreach (array_keys($this->orderedIssuesMap[$type]) as $team) {
+                        foreach (array_keys($this->orderedIssuesMap[$type][$team]) as $month) {
+                            ksort($this->orderedIssuesMap[$type][$team][$month]);
+                            foreach (array_keys($this->orderedIssuesMap[$type][$team][$month]) as $rank) {
+                                $issues[] = array_shift($this->orderedIssuesMap[$type][$team][$month][$rank]);
+
+                                if (empty($this->orderedIssuesMap[$type][$team][$month][$rank])) 
+                                    unset($this->orderedIssuesMap[$type][$team][$month][$rank]);
                                 break;
                             }
-                            if (empty($groupedIssues[$group][$team][$month])) {
-                                unset($groupedIssues[$group][$team][$month]);
-                            }
+                            if (empty($this->orderedIssuesMap[$type][$team][$month])) 
+                                unset($this->orderedIssuesMap[$type][$team][$month]);
                             break;
                         }
-                        if (empty($groupedIssues[$group][$team])) {
-                            unset($groupedIssues[$group][$team]);
-                        }
+                        if (empty($this->orderedIssuesMap[$type][$team])) 
+                            unset($this->orderedIssuesMap[$type][$team]);
                     }
                     $issues[count($issues) - 1]['separation'] = true;
                 }
-            } else {
-                while(!empty($groupedIssues[$group])) {
-                    foreach (array_keys($groupedIssues[$group]) as $team) {
-                        if (empty($groupedIssues[$group][$team])) {
-                            unset($groupedIssues[$group][$team]);
-                        } else {
-                            $issues[] = array_shift($groupedIssues[$group][$team]);
-                        }
-                    }
-                }
             }
         }
 
-        $issues = $end === null
-            ? array_slice($issues, $start - 1)
-            : array_slice($issues, $start - 1, $end - $start + 1);
-
-        return json_encode(array('issues' => $issues));
+        return $issues;
     }
-
-    private function getChangeLog($issueId, $status)
-    {
-        $statusFromCache = apc_fetch($issueId);
-
-        if ($statusFromCache === $status) {
-            $changeLog = apc_fetch('changes-' . $issueId);
-        } else {
-            $changeLog = $this->dao->getChangeLog($issueId);
-            apc_store($issueId, $status);
-            apc_store('changes-' . $issueId, $changeLog);
-        }
-
-        return $changeLog;
-    }
-
 }
