@@ -8,7 +8,7 @@ epics:
 
   fields:
     shipping:
-      label: Shipping
+      label: Shipped
       states: Closed
       resolution:
         - Done
