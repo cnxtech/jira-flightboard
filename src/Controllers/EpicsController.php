@@ -32,9 +32,7 @@ class EpicsController
         );
 
         foreach ($this->config['epics']['fields'] as $field => $properties) {
-            if ($field === 'delayed') {
-                continue;
-            }
+            if ($field === 'delayed') continue;
 
             $statusKey = isset($properties['states']) ? $properties['states'] : 'default';
 
@@ -46,7 +44,7 @@ class EpicsController
 
                 if (isset($properties['resolution'])) {
                     $resolutions = is_array($properties['resolution'])
-                        ?  $properties['resolution']
+                        ? $properties['resolution']
                         : array($properties['resolution']);
                     foreach ($resolutions as $resolution) {
                         $this->states[$state][$resolution] = $field;
@@ -79,9 +77,29 @@ class EpicsController
 
         $issueList = $this->getListFromMap();
 
+        $summaries = array();
+        $issueListGrouped = array();
+        foreach ($issueList as $key => $issue) {
+            if (!isset($summaries[$issue['summary']])) {
+                $issueListGrouped[] = $issue;
+                $summaries[$issue['summary']] = count($issueListGrouped) - 1;
+            } else {
+                $newIndex = $summaries[$issue['summary']];
+                $head = array_slice($issueListGrouped, 0, $newIndex + 1);
+                $head[] = $issue;
+                for ($i = $newIndex + 1; $i < count($issueListGrouped); $i++) {
+                    $head[] = $issueListGrouped[$i];
+                }
+                $issueListGrouped = $head;
+                foreach ($summaries as $summary => $index) {
+                    if ($newIndex <= $index) $summaries[$summary]++;
+                }
+            }
+        }
+
         $issueListSlice = $end === null
-            ? array_slice($issueList, $start - 1)
-            : array_slice($issueList, $start - 1, $end - $start + 1);
+            ? array_slice($issueListGrouped, $start - 1)
+            : array_slice($issueListGrouped, $start - 1, $end - $start + 1);
 
         return json_encode(array('issues' => $issueListSlice));
     }
