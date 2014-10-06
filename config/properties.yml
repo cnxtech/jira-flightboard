@@ -88,6 +88,12 @@ teams:
   Android Team:
     key: SOA
     id: 10201
+  AMP:
+    key: AMP
+    id: 10054
+  AMP News:
+    key: NWS
+    id: 10011
   Data Team:
     key: DEN
     id: 10241
