@@ -6,6 +6,70 @@ epics:
     - "Open"
     - "Resolved"
 
+  fields:
+    shipping:
+      label: Shipped
+      states: Closed
+      resolution:
+        - Done
+        - Completed
+        - Fixed
+      sorting: time
+      limit: "-7 days"
+      display:
+        since: false
+        states_color: limegreen
+
+    release:
+      label: Awaiting Release
+      states: Resolved
+      sorting: time
+      display:
+        since: true
+        states_color: time
+        time_color: time
+        time:
+          "-45 days": red
+          "-30 days": yellow
+          normal: darkgreen
+
+    progress:
+      label: In flight
+      states: In Progress
+      sorting: time
+      display:
+        since: true
+        states_color: time
+        time_color: time
+        time:
+          "-45 days": red
+          "-30 days": yellow
+          normal: white
+
+    delayed:
+      label: Delayed
+      states: Open
+      sorting: time
+      display:
+        since: false
+        states_color: yellow
+
+    cancelled:
+      label: Cancelled
+      states: Closed
+      sorting: time
+      limit: "-7 days"
+      display:
+        since: false
+        states_color: red
+
+    open:
+      label: ""
+      sorting: team-group
+      display:
+        since: false
+        states_color: white
+
 incidents:
   project: "Incident Management"
   priorities:
@@ -24,6 +88,12 @@ teams:
   Android Team:
     key: SOA
     id: 10201
+  AMP:
+    key: AMP
+    id: 10054
+  AMP News:
+    key: NWS
+    id: 10011
   Data Team:
     key: DEN
     id: 10241
@@ -57,7 +127,7 @@ teams:
   SE - YellowTeam:
     key: SE
     id: 11352
-  SE - GreenTeam:
+  Service Engineering:
     key: SE
     id: 11352
   Experiences Services:

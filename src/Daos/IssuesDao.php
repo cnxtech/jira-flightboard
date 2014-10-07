@@ -32,18 +32,6 @@ interface IssuesDao
     public function getByStatus($project, array $status);
 
     /**
-     * @param string $projectKey
-     * @return int
-     */
-    public function getProjectId($projectKey);
-
-    /**
-     * @param int $issueId
-     * @return array
-     */
-    public function getChangeLog($issueId);
-
-    /**
      * @param int $issueId
      * @return array
      */

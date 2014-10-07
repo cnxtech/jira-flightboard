@@ -1,3 +1,4 @@
+<span style="color: red; display: none"><b>Server is not available!</b></span>
 {{ #issues }}
 {{ #1 }}
 <table cellspacing="0" cellpadding="0">

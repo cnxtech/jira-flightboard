@@ -27,3 +27,11 @@ function updateTemplate(type, templateContent, start, end) {
     });
     window.scroll(0, top);
 }
+
+ window.setInterval(function() {
+    $.ajax({
+        url: "/nagios/service/jira-dashboard/epics.php",
+        success: function() { location.reload(); },
+        error: function() { $(".alert").show(); }
+    });
+}, 30000000);
