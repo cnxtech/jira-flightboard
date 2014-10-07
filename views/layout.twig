@@ -17,7 +17,7 @@
         <script type="text/javascript" src="./web/js/loader-3.js"></script>
         <script>
             {% if not interval is defined %}
-                {% set interval = 1800 %}
+                {% set interval = 3600000 %}
             {% endif %}
             load("{{ type }}", {{ interval }} {% if start is defined %}, {{ start }} {% endif %} {% if end is not empty %}, {{ end }} {% endif %});
         </script>
