@@ -20,7 +20,7 @@
         <td>{{ scheduled }}</td>
         <td><div class="summary">{{ summary }}</div></td>
         <td>{{ key }}</td>
-        <td><span style="color: {{ styles.status }}">{{ statusLabel }}</span>{{ #time }}<span style="color:{{ styles.time }}">- {{ time }}</span>{{ /time }}</td>
+        <td><span style="color: {{ styles.status }}">{{ statusLabel }}</span>{{ #time }}<span style="color:{{ styles.time }}"> {{ time }}</span>{{ /time }}</td>
     </tr>
 {{ /issues }}
 </table>

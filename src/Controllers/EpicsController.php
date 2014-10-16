@@ -57,14 +57,16 @@ class EpicsController
     }
 
     /**
-     * @param int $start
-     * @param int $end
+     * @param $start
+     * @param $end
+     * @return string
      */
     public function get($start, $end)
     {
         try {
             $rawIssues = $this->getRawIssuesFromJira();
         } catch (Exception $e) {
+            //ERROR, What is this $app, I have no idea...
             return $app->json(array('error' => 'Could not get issues from Jira.'));
         }
 
@@ -175,7 +177,9 @@ class EpicsController
         if ($status == 'Open' && $isDelayed($rawIssue['changelog'], $status)) {
             $issue['status'] = 'delayed';
         } else if ($status == 'Open') {
-            return null;
+            //return null;
+            $issue['status'] = 'unscheduled';
+            $issue['scheduled'] = 'N/A';
         }
 
         $config = $this->config['epics']['fields'][$issue['status']];

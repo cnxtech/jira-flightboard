@@ -70,6 +70,14 @@ epics:
         since: false
         states_color: white
 
+    unscheduled:
+      label: UnScheduled
+      states: Open
+      sorting: time
+      display:
+        since: false
+        states_color: blue
+
 incidents:
   project: "Incident Management"
   priorities:
