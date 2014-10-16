@@ -71,7 +71,7 @@ epics:
         states_color: white
 
     unscheduled:
-      label: UnScheduled
+      label: ""
       states: Open
       sorting: time
       display:
