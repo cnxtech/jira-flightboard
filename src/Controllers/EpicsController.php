@@ -82,11 +82,12 @@ class EpicsController
         $summaries = array();
         $issueListGrouped = array();
         foreach ($issueList as $key => $issue) {
-            if (!isset($summaries[$issue['summary']])) {
+            $jiraSummary = trim($issue['summary']);
+            if (!isset($summaries[$jiraSummary])) {
                 $issueListGrouped[] = $issue;
-                $summaries[$issue['summary']] = count($issueListGrouped) - 1;
+                $summaries[$jiraSummary] = count($issueListGrouped) - 1;
             } else {
-                $newIndex = $summaries[$issue['summary']];
+                $newIndex = $summaries[$jiraSummary];
                 $head = array_slice($issueListGrouped, 0, $newIndex + 1);
                 $head[] = $issue;
                 for ($i = $newIndex + 1; $i < count($issueListGrouped); $i++) {
