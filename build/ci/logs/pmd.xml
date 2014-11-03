@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pmd version="1.5.0" timestamp="2014-11-03T03:47:24+00:00">
+  <file name="/var/www/html/jira-dashboard/src/Controllers/EpicsController.php">
+    <violation beginline="23" endline="23" rule="UnusedPrivateField" ruleset="Unused Code Rules" externalInfoUrl="http://phpmd.org/rules/unusedcode.html#unusedprivatefield" priority="3">
+      Avoid unused private fields such as '$sttaes'.
+    </violation>
+    <violation beginline="24" endline="24" rule="UnusedPrivateField" ruleset="Unused Code Rules" externalInfoUrl="http://phpmd.org/rules/unusedcode.html#unusedprivatefield" priority="3">
+      Avoid unused private fields such as '$summaries'.
+    </violation>
+    <violation beginline="26" endline="58" rule="CyclomaticComplexity" ruleset="Code Size Rules" package="JiraDashboard\Controllers" externalInfoUrl="http://phpmd.org/rules/codesize.html#cyclomaticcomplexity" class="EpicsController" method="setUp" priority="3">
+      The method setUp() has a Cyclomatic Complexity of 10. The configured cyclomatic complexity threshold is 10.
+    </violation>
+    <violation beginline="26" endline="58" rule="NPathComplexity" ruleset="Code Size Rules" package="JiraDashboard\Controllers" externalInfoUrl="http://phpmd.org/rules/codesize.html#npathcomplexity" class="EpicsController" method="setUp" priority="3">
+      The method setUp() has an NPath complexity of 1151. The configured NPath complexity threshold is 200.
+    </violation>
+    <violation beginline="65" endline="113" rule="CyclomaticComplexity" ruleset="Code Size Rules" package="JiraDashboard\Controllers" externalInfoUrl="http://phpmd.org/rules/codesize.html#cyclomaticcomplexity" class="EpicsController" method="get" priority="3">
+      The method get() has a Cyclomatic Complexity of 10. The configured cyclomatic complexity threshold is 10.
+    </violation>
+    <violation beginline="65" endline="113" rule="NPathComplexity" ruleset="Code Size Rules" package="JiraDashboard\Controllers" externalInfoUrl="http://phpmd.org/rules/codesize.html#npathcomplexity" class="EpicsController" method="get" priority="3">
+      The method get() has an NPath complexity of 240. The configured NPath complexity threshold is 200.
+    </violation>
+    <violation beginline="89" endline="89" rule="UnusedLocalVariable" ruleset="Unused Code Rules" externalInfoUrl="http://phpmd.org/rules/unusedcode.html#unusedlocalvariable" priority="3">
+      Avoid unused local variables such as '$key'.
+    </violation>
+    <violation beginline="149" endline="245" rule="CyclomaticComplexity" ruleset="Code Size Rules" package="JiraDashboard\Controllers" externalInfoUrl="http://phpmd.org/rules/codesize.html#cyclomaticcomplexity" class="EpicsController" method="extractIssueFromRawIssue" priority="3">
+      The method extractIssueFromRawIssue() has a Cyclomatic Complexity of 26. The configured cyclomatic complexity threshold is 10.
+    </violation>
+    <violation beginline="149" endline="245" rule="NPathComplexity" ruleset="Code Size Rules" package="JiraDashboard\Controllers" externalInfoUrl="http://phpmd.org/rules/codesize.html#npathcomplexity" class="EpicsController" method="extractIssueFromRawIssue" priority="3">
+      The method extractIssueFromRawIssue() has an NPath complexity of 3726800. The configured NPath complexity threshold is 200.
+    </violation>
+    <violation beginline="275" endline="311" rule="CyclomaticComplexity" ruleset="Code Size Rules" package="JiraDashboard\Controllers" externalInfoUrl="http://phpmd.org/rules/codesize.html#cyclomaticcomplexity" class="EpicsController" method="getListFromMap" priority="3">
+      The method getListFromMap() has a Cyclomatic Complexity of 13. The configured cyclomatic complexity threshold is 10.
+    </violation>
+    <violation beginline="282" endline="282" rule="UnusedLocalVariable" ruleset="Unused Code Rules" externalInfoUrl="http://phpmd.org/rules/unusedcode.html#unusedlocalvariable" priority="3">
+      Avoid unused local variables such as '$key'.
+    </violation>
+  </file>
+  <file name="/var/www/html/jira-dashboard/src/Controllers/IncidentController.php">
+    <violation beginline="26" endline="147" rule="CyclomaticComplexity" ruleset="Code Size Rules" package="JiraDashboard\Controllers" externalInfoUrl="http://phpmd.org/rules/codesize.html#cyclomaticcomplexity" class="IncidentController" method="get" priority="3">
+      The method get() has a Cyclomatic Complexity of 18. The configured cyclomatic complexity threshold is 10.
+    </violation>
+    <violation beginline="26" endline="147" rule="NPathComplexity" ruleset="Code Size Rules" package="JiraDashboard\Controllers" externalInfoUrl="http://phpmd.org/rules/codesize.html#npathcomplexity" class="IncidentController" method="get" priority="3">
+      The method get() has an NPath complexity of 2052. The configured NPath complexity threshold is 200.
+    </violation>
+    <violation beginline="46" endline="46" rule="UnusedLocalVariable" ruleset="Unused Code Rules" externalInfoUrl="http://phpmd.org/rules/unusedcode.html#unusedlocalvariable" priority="3">
+      Avoid unused local variables such as '$teams'.
+    </violation>
+  </file>
+</pmd>

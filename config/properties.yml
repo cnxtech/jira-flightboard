@@ -1,3 +1,9 @@
+root_point: "/jira-dashboard"
+
+jira_api:
+  token: YXV0by5ib3Q6NHJVanVxVTVyVXRyMmJyYURyZXQ3dXNVZ3VGVXBIYWs=
+  endpoint: https://jira.shazamteam.net/rest/api/2/
+
 epics:
   project: "Shazam Road Map"
   status:

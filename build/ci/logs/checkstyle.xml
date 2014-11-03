@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="1.5.5">
+<file name="/var/www/html/jira-dashboard/src/Controllers/IncidentController.php">
+ <error line="135" column="21" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+</file>
+<file name="/var/www/html/jira-dashboard/src/Controllers/EpicsController.php">
+ <error line="36" column="13" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="82" column="13" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="103" column="21" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="138" column="59" severity="error" message="Each PHP statement must be on a line by itself" source="Generic.Formatting.DisallowMultipleStatements.SameLine"/>
+ <error line="139" column="15" severity="warning" message="Usage of ELSE IF is discouraged; use ELSEIF instead" source="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed"/>
+ <error line="176" column="22" severity="error" message="Expected 1 space after FUNCTION keyword; 0 found" source="Squiz.Functions.MultiLineFunctionDeclaration.SpaceAfterFunction"/>
+ <error line="178" column="17" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="179" column="17" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="180" column="21" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="185" column="11" severity="warning" message="Usage of ELSE IF is discouraged; use ELSEIF instead" source="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed"/>
+ <error line="197" column="17" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="210" column="13" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="220" column="30" severity="error" message="Expected 1 space after FUNCTION keyword; 0 found" source="Squiz.Functions.MultiLineFunctionDeclaration.SpaceAfterFunction"/>
+ <error line="221" column="21" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="222" column="25" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="256" column="13" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="260" column="11" severity="warning" message="Usage of ELSE IF is discouraged; use ELSEIF instead" source="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed"/>
+ <error line="265" column="13" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="266" column="123" severity="warning" message="Line exceeds 120 characters; contains 122 characters" source="Generic.Files.LineLength.TooLong"/>
+ <error line="282" column="17" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="283" column="21" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="284" column="25" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="294" column="33" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="294" column="97" severity="error" message="Whitespace found at end of line" source="Squiz.WhiteSpace.SuperfluousWhitespace.EndLine"/>
+ <error line="298" column="29" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="298" column="86" severity="error" message="Whitespace found at end of line" source="Squiz.WhiteSpace.SuperfluousWhitespace.EndLine"/>
+ <error line="302" column="25" severity="error" message="Inline control structures are not allowed" source="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+ <error line="302" column="74" severity="error" message="Whitespace found at end of line" source="Squiz.WhiteSpace.SuperfluousWhitespace.EndLine"/>
+</file>
+<file name="/var/www/html/jira-dashboard/src/Daos/RestApiDao.php">
+ <error line="67" column="1" severity="error" message="Closing class brace must be on a line by itself" source="PSR2.Classes.ClassDeclaration.CloseBraceSameLine"/>
+ <error line="67" column="2" severity="error" message="Whitespace found at end of line" source="Squiz.WhiteSpace.SuperfluousWhitespace.EndLine"/>
+</file>
+<file name="/var/www/html/jira-dashboard/src/Utils/DateFormatter.php">
+ <error line="57" column="1" severity="error" message="Closing class brace must be on a line by itself" source="PSR2.Classes.ClassDeclaration.CloseBraceSameLine"/>
+ <error line="57" column="2" severity="error" message="Whitespace found at end of line" source="Squiz.WhiteSpace.SuperfluousWhitespace.EndLine"/>
+</file>
+<file name="/var/www/html/jira-dashboard/web/index.php">
+ <error line="25" column="38" severity="error" message="Expected 1 space after FUNCTION keyword; 0 found" source="Squiz.Functions.MultiLineFunctionDeclaration.SpaceAfterFunction"/>
+ <error line="28" column="34" severity="error" message="Expected 1 space after FUNCTION keyword; 0 found" source="Squiz.Functions.MultiLineFunctionDeclaration.SpaceAfterFunction"/>
+</file>
+</checkstyle>

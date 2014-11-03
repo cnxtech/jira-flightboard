@@ -1,8 +1,14 @@
 {
+    "repositories": [
+        {
+            "url": "git@gitlab.uk.shazamteam.net:infra-tools/common-config.git",
+            "type": "git"
+        }
+    ],
     "require": {
         "silex/silex": "~1.1",
-        "symfony/yaml": "2.1.*@dev",
-        "twig/twig": "1.15.*@dev"
+        "twig/twig": "1.15.*@dev",
+        "shazam/common-config": "0.1.0"
     },
     "autoload": {
         "psr-4": {

@@ -20,7 +20,7 @@ function updateTemplate(type, templateContent, start, end) {
     var top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
     var end = end == null ? "" : "&end=" + end;
 
-    $("#content").load("./api/" + type + ".php?start=" + start + end, function (response) {
+    $("#content").load("./api/" + type + "?start=" + start + end, function (response) {
         var data = JSON.parse(response);
         var content = Mustache.render(templateContent, data);
         $(this).html(content);
@@ -30,7 +30,7 @@ function updateTemplate(type, templateContent, start, end) {
 
  window.setInterval(function() {
     $.ajax({
-        url: "/nagios/service/jira-dashboard/epics.php",
+        url: "/nagios/service/jira-dashboard/epics",
         success: function() { location.reload(); },
         error: function() { $(".alert").show(); }
     });

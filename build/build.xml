@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jira-dashboard" basedir="." default="build-rpm">
+
+    <tstamp prefix="start">
+        <format property="DATE" pattern="%Y%m%d%H%M" locale="en"/>
+    </tstamp>
+
+    <property file="./build.properties" />
+
+    <property name="build.release" value="${start.DATE}" />
+    <property name="build.dir" value="${project.basedir}" />
+    <property name="build.package" value="${build.dir}/package" />
+    <property name="release.name" value="${phing.project.name}-${build.version}-${build.release}" />
+
+    <!-- ============================================  -->
+    <!-- Target: clean                                 -->
+    <!-- ============================================  -->
+    <target name="clean">
+        <echo msg="Cleaning things up"/>
+        <delete dir="${build.dir}/src"/>
+        <delete dir="${build.dir}/dist"/>
+        <delete dir="${build.dir}/package"/>
+        <delete>
+            <fileset dir="${build.dir}">
+                <include name="*.tar.gz" />
+                <include name="*.rpm" />
+            </fileset>
+        </delete>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: prepare                               -->
+    <!-- ============================================  -->
+    <target name="prepare" depends="clean">
+        <echo msg="Making directories" />
+        <mkdir dir="${build.dir}/src" />
+        <mkdir dir="${build.dir}/dist" />
+    </target>
+
+    <target name="install-dependencies">
+        <exec command="/usr/local/bin/composer.phar install -n --optimize-autoloader --no-dev --working-dir '..'" passthru="true" />
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: build                                 -->
+    <!-- ============================================  -->
+    <target name="build" depends="prepare">
+        <echo msg="Copying files to build directory..." />
+
+        <echo msg="Copying htaccess to src directory..." />
+        <copy file="../.htaccess" tofile="./src/${phing.project.name}-${build.version}/.htaccess" />
+
+        <echo msg="Copying src to src directory..." />
+        <copy todir="src/${phing.project.name}-${build.version}/src" >
+            <fileset defaultexcludes="false" expandsymboliclinks="true" dir="../src">
+                <include name="**/**" />
+            </fileset>
+        </copy>
+
+        <echo msg="Copying views to src directory..." />
+        <copy todir="src/${phing.project.name}-${build.version}/views" >
+            <fileset defaultexcludes="false" expandsymboliclinks="true" dir="../views">
+                <include name="**/**" />
+            </fileset>
+        </copy>
+
+        <echo msg="Copying vendor to src directory..." />
+        <copy todir="src/${phing.project.name}-${build.version}/vendor" >
+            <fileset defaultexcludes="false" expandsymboliclinks="true" dir="../vendor">
+                <include name="**/**" />
+            </fileset>
+        </copy>
+
+        <echo msg="Copying web to src directory..." />
+        <copy todir="src/${phing.project.name}-${build.version}/web" >
+            <fileset defaultexcludes="false" expandsymboliclinks="true" dir="../web">
+                <include name="**/**" />
+            </fileset>
+        </copy>
+
+        <echo msg="Copying config to src directory..." />
+        <copy todir="src/${phing.project.name}-${build.version}/config" >
+            <fileset defaultexcludes="false" expandsymboliclinks="true" dir="../config">
+                <include name="**/**" />
+                <exclude name="**/environment.yml" />
+            </fileset>
+        </copy>
+    </target>
+    <!-- ============================================  -->
+    <!-- (DEFAULT)  Target: dist                       -->
+    <!-- ============================================  -->
+    <target name="dist" depends="build">
+        <echo msg="Creating archive..." />
+
+        <tar destfile="${build.dir}/dist/${release.name}.tar.gz" compression="gzip">
+            <fileset dir="${build.dir}/src">
+                <include name="**/**" />
+            </fileset>
+        </tar>
+
+        <echo msg="Files copied and compressed in build directory OK!" />
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Build RPM                                     -->
+    <!-- ============================================  -->
+    <target name="build-rpm" depends="dist" >
+        <echo msg="Creating RPM Build Environment" />
+        <mkdir dir="${build.package}/SPECS" />
+        <mkdir dir="${build.package}/SOURCES" />
+        <mkdir dir="${build.package}/BUILD" />
+        <mkdir dir="${build.package}/RPMS" />
+        <mkdir dir="${build.package}/RPMS/noarch" />
+        <mkdir dir="${build.package}/SRPMS" />
+
+        <echo msg="Creating RPM Spec File" />
+        <!-- Apply some string substitution on the spec file and copy it to a new location -->
+        <copy file="${build.dir}/${phing.project.name}.spec" tofile="${build.package}/SPECS/${phing.project.name}.spec"
+              overwrite="true">
+            <filterchain>
+                <replacetokens begintoken="##" endtoken="##">
+                    <token key="PROJECT" value="${phing.project.name}" />
+                    <token key="VERSION" value="${build.version}" />
+                    <token key="RELEASE" value="${build.release}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+        <!-- copy source into the users RPM build environment -->
+        <copy file="${build.dir}/dist/${release.name}.tar.gz"
+              todir="${build.package}/SOURCES/" overwrite="true" />
+
+        <!-- Build the RPM in the users RPM build environment -->
+        <exec command="/usr/bin/rpmbuild -bb --target=noarch-redhat-linux --define '_topdir ${build.package}' --clean ${build.package}/SPECS/${phing.project.name}.spec"
+              escape="true" passthru="true" />
+
+        <copy file="${build.package}/RPMS/noarch/${release.name}.noarch.rpm" todir="${build.dir}/dist/"/>
+    </target>
+
+    <target name="snapshot" depends="build-rpm">
+        <echo msg="Pushing RPM file to DIST Repository on SNAPSHOT" />
+        <!-- The response of the dist API returns the package ID, stored in packageId file for build system to use it. -->
+        <exec command="curl -F file=@dist/${release.name}.noarch.rpm ${dist.api} > packageId" escape="false" />
+                <exec command="echo ${build.version}-${build.release} > releaseName" escape="false" />
+    </target>
+</project>

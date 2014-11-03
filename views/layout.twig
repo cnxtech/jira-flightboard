@@ -19,7 +19,7 @@
             {% if not interval is defined %}
                 {% set interval = 3600000 %}
             {% endif %}
-            load("{{ type }}", {{ interval }} {% if start is defined %}, {{ start }} {% endif %} {% if end is not empty %}, {{ end }} {% endif %});
+            load("{{ type }}", {{ interval }} {% if start is defined %}, {{ start }} {% endif %} {% if end is defined and end is not empty %}, {{ end }} {% endif %});
         </script>
         {% block js %}
         {% endblock %}

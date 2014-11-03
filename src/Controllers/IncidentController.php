@@ -25,16 +25,17 @@ class IncidentController
      */
     public function get(Application $app)
     {
-        $priorities = $app['config']['incidents']['priorities'];
+        $config = $app['config']->fetch();
+        $priorities = $config['incidents']['priorities'];
 
         $dao = new IssuesRestApiDao(
-            $app['config']['jira_api']['endpoint'],
-            $app['config']['jira_api']['token']
+            $config['jira_api']['endpoint'],
+            $config['jira_api']['token']
         );
 
         try {
             $rawIssues = $dao->getByPriority(
-                $app['config']['incidents']['project'],
+                $config['incidents']['project'],
                 $priorities
             );
         } catch (\Exception $e) {
@@ -69,7 +70,7 @@ class IncidentController
 
             $smell = DateFormatter::getSmellLevel(
                 $issue['fields']['created'],
-                $app['config']['smell_levels']
+                $config['smell_levels']
             );
 
             $linkedIssues = array();

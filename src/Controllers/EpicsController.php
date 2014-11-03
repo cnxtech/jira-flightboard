@@ -9,6 +9,7 @@ namespace JiraDashboard\Controllers;
 
 use Exception;
 use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\Behat\Gherkin\Filter\LineRangeFilterTest;
 use JiraDashboard\Utils\DateFormatter;
@@ -22,9 +23,9 @@ class EpicsController
     private $sttaes = array();
     private $summaries;
 
-    public function __construct(Application $app)
+    private function setUp(Application $app)
     {
-        $this->config = $app['config'];
+        $this->config = $app['config']->fetch();
 
         $this->dao = new IssuesRestApiDao(
             $this->config['jira_api']['endpoint'],
@@ -57,12 +58,16 @@ class EpicsController
     }
 
     /**
-     * @param $start
-     * @param $end
+     * @param Request $request
+     * @param Application $app
      * @return string
      */
-    public function get($start, $end)
+    public function get(Request $request, Application $app)
     {
+        $this->setUp($app);
+        $start = $request->get('start', 1);
+        $end = $request->get('end');
+
         try {
             $rawIssues = $this->getRawIssuesFromJira();
         } catch (Exception $e) {
