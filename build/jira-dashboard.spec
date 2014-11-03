@@ -14,7 +14,7 @@ URL: http://www.shazam.com
 Group: Applications/Internet
 Source: %{name}-%{version}-%{release}.tar.gz
 BuildArch: noarch
-Requires: php php-pdo memcached php-pecl-memcached
+Requires: php
 
 BuildRoot: /tmp/template
 
