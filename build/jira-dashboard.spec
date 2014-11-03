@@ -50,11 +50,8 @@ rm -rf $RPM_BUILD_ROOT
 %{contentdir}/views
 %{contentdir}/.htaccess
 %{configdir}/jira-dashboard.conf
-%attr(777, apache, apache) %{contentdir}/views/cache
 
 %post
-
-rm -rf %{contentdir}/views/cache/*
 
 /usr/sbin/setsebool -P httpd_can_network_connect 1
 
