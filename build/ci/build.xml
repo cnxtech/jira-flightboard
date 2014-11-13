@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="Jira Dashboard" default="build" basedir="../../">
-    <target name="build" depends="prepare,lint,phploc,phpmd,phpcs,phpcpd,tests"/>
+    <target name="build" depends="prepare,lint,phploc,phpmd,phpcs,phpcpd"/>
 
     <property name="codebase" value="" />
 
@@ -78,18 +78,6 @@
             <arg value="${basedir}/build/ci/logs/pmd-cpd.xml" />
             <arg path="${basedir}/src" />
             <arg path="${basedir}/web/index.php" />
-        </exec>
-    </target>
-
-    <!-- PHP Unit -->
-    <target name="tests" description="Run tests with PHPUnit">
-        <exec executable="phpunit" failonerror="true">
-            <arg value="-c"/>
-            <arg path="${basedir}"/>
-            <arg value="--coverage-html"/>
-            <arg path="${basedir}/build/ci/logs/tests/"/>
-            <arg value="--coverage-clover"/>
-            <arg path="${basedir}/build/ci/logs/tests/clover.xml"/>
         </exec>
     </target>
 </project>
