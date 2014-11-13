@@ -11,25 +11,58 @@ namespace JiraDashboard\Daos;
  * @package JiraDashboard\Daos
  */
 
-class IssuesRestApiDao extends RestApiDao implements IssuesDao
+class IssuesRestApiDao
 {
     /**
-     * @param string $project
-     * @param array $priorities
+     * @var string
+     */
+    private $baseUrl;
+
+    /**
+     * @var null|string
+     */
+    private $authenticationToken;
+
+    /**
+     * @param string $baseUrl
+     * @param string|null $authenticationToken
+     */
+    public function __construct($baseUrl, $authenticationToken = null)
+    {
+        $this->baseUrl = $baseUrl;
+        $this->authenticationToken = $authenticationToken;
+    }
+
+    /**
+     * @param $endpoint
      * @return array
      * @throws \Exception
      */
-    public function getByPriority($project, array $priorities)
+    private function query($endpoint)
     {
-        $priorities = implode(',', $priorities);
-        $query = sprintf(
-            'search?jql=project="%s" and priority in(%s) and status in ("Open", "Stable", "All clear")&maxResults=-1',
-            $project,
-            $priorities
-        );
-        $query = str_replace(' ', '+', $query);
+        $ch = curl_init();
 
-        return parent::query($query);
+        curl_setopt($ch, CURLOPT_URL, $this->baseUrl . $endpoint);
+
+        if ($this->authenticationToken !== null) {
+            curl_setopt(
+                $ch,
+                CURLOPT_HTTPHEADER,
+                array('Authorization: Basic ' . $this->authenticationToken)
+            );
+        }
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $responseJson = curl_exec($ch);
+        $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        $responseArray = json_decode($responseJson, true);
+        if (200 != $httpStatus || $responseArray === null) {
+            throw new \Exception();
+        }
+
+        return $responseArray;
     }
 
     /**
@@ -52,18 +85,6 @@ class IssuesRestApiDao extends RestApiDao implements IssuesDao
         );
         $query = str_replace(' ', '+', $query);
 
-        return parent::query($query);
-    }
-
-    /**
-     * @param istring $epicKey
-     * @return array
-     */
-    public function getIssuesByEpic($epicKey)
-    {
-        $query = sprintf('search?jql="Epic Link"=%s &maxResults=-1', $epicKey);
-        $query = str_replace(' ', '+', $query);
-
-        return parent::query($query);
+        return $this->query($query);
     }
 }

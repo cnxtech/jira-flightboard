@@ -3,4 +3,4 @@ vendor
 build/ci/logs
 build/ci/api
 cache.properties
-
+*.swp

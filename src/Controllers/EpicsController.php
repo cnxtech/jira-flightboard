@@ -109,7 +109,7 @@ class EpicsController
             ? array_slice($issueListGrouped, $start - 1)
             : array_slice($issueListGrouped, $start - 1, $end - $start + 1);
 
-        return json_encode(array('issues' => $issueListSlice));
+        return $app['twig']->render('epics.twig', array('issues' => $issueListSlice));
     }
 
     /**

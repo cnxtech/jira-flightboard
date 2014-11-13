@@ -58,3 +58,9 @@ td {
 .separation td {
     border-bottom: 4px solid grey;
 }
+
+.last_time {
+    font-size: 10px;
+    color: #C0C0C0;
+    float: right;
+}

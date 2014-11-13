@@ -1,8 +1,41 @@
-{% extends 'layout.twig' %}
-
-{% set title = "Epics Dashboard" %}
-{% set type = "epics" %}
-
-{% block css %}
-    <link rel="stylesheet" href="./web/css/epics-4.css" />
-{% endblock %}
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>Epics Board</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" href="./web/css/epics.css" />
+    </head>
+    <body>
+        <div class="last_time">Last update: {{ "now" |date("Y-m-d H:i:s") }}</div>
+        <table cellspacing="0" cellpadding="0">
+            <colgroup>
+                <col width="4%">
+                <col width="9%">
+                <col width=55%">
+                <col width="11%">
+                <col width="23%">
+            </colgroup>
+            <tr class="header">
+                <td></td>
+                <td>Sched</td>
+                <td>City</td>
+                <td>Flight</td>
+                <td>Status</td>
+            </tr>
+        {% for issue in issues %}
+            <tr {% if issue.separation is defined %} class="separation"{% endif %}>
+                <td class="image"><img src="./web/img/{{ issue.icon }}.png"/></td>
+                <td>{{ issue.scheduled }}</td>
+                <td><div class="summary">{{ issue.summary }}</div></td>
+                <td>{{ issue.key }}</td>
+                <td><span style="color: {{ issue.styles.status }}">{{ issue.statusLabel }}</span>{% if issue.time is defined %}<span style="color:{{ issue.styles.time }}"> {{ issue.time }}</span>{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </table>
+        
+        <script>
+            // refresh every 1 hour
+            /setTimeout(function () {location.reload();}, 3600000);
+        </script>
+    </body>
+</html>

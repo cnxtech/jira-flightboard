@@ -8,7 +8,11 @@
     "require": {
         "silex/silex": "~1.1",
         "twig/twig": "1.15.*@dev",
-        "shazam/common-config": "0.1.0"
+        "shazam/common-config": "0.1.0",
+        "behat/behat": "3.0.14",
+        "behat/mink-extension": "2.0.1",
+        "behat/mink-goutte-driver": "1.1.0",
+        "behat/mink-selenium2-driver": "1.2.0"
     },
     "autoload": {
         "psr-4": {

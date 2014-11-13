@@ -22,20 +22,7 @@ $app->register(new TwigServiceProvider(), array('twig.path' => __DIR__ . '/../vi
 $rootPoint = $app['config']->fetch('root_point');
 
 $controllerFactory = $app['controllers_factory'];
-$controllerFactory->get('incidents', function(Application $app) {
-    return $app['twig']->render('incidents.twig');
-});
-$controllerFactory->get('epics', function(Request $request, Application $app) {
-    $start = (int) $request->get('start', 1);
-    $end = $request->get('end', null);
-
-    return $app['twig']->render('epics.twig', array('start' => $start, 'end' => $end));
-});
-$app->mount($rootPoint, $controllerFactory);
-
-$controllerFactory = $app['controllers_factory'];
-$controllerFactory->get('incidents', '\JiraDashboard\Controllers\IncidentController::get');
 $controllerFactory->get('epics', '\JiraDashboard\Controllers\EpicsController::get');
-$app->mount($rootPoint . '/api', $controllerFactory);
+$app->mount($rootPoint, $controllerFactory);
 
 $app->run();

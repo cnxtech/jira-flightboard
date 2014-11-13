@@ -1,4 +1,5 @@
-root_point: "/nagios/service/jira-dashboard"
+root_point: "/jira-dashboard"
+#root_point: "/nagios/service/jira-dashboard"
 
 jira_api:
   token: YXV0by5ib3Q6NHJVanVxVTVyVXRyMmJyYURyZXQ3dXNVZ3VGVXBIYWs=
