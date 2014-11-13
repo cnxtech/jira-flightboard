@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Check everything is set up
-if [ `rpm -qa nodejs` == ""  ]
+if [[ `rpm -qa nodejs` == ""  ]]
 then
     echo "Installing nodejs..."
     sudo yum install nodejs -y > /dev/null
 fi
-if [ `rpm -qa npm` == ""  ]
+if [[ `rpm -qa npm` == ""  ]]
 then
     echo "Installing npm..."
     sudo yum install npm -y > /dev/null
@@ -24,12 +24,12 @@ fi
 
 seleniumFile="selenium-server-standalone-2.44.0.jar"
 url="http://selenium-release.storage.googleapis.com/2.44/$seleniumFile"
-if ! [ -e "$seleniumFile" ]
+if ! [[ -e "$seleniumFile" ]]
 then
     echo "$seleniumFile not found. Downloading it from $url"
     wget $url >/dev/null 2>&1
 
-    if ! [ -e "$seleniumFile" ]
+    if ! [[ -e "$seleniumFile" ]]
     then
         echo "ERROR: Could not download $seleniumFile. Exiting."
         exit 1
@@ -62,7 +62,7 @@ phantomjs --webdriver=4445 --webdriver-selenium-grid-hub=http://127.0.0.1:4444 >
 
 # Clean up processes
 process=`ps aux | grep "$seleniumFile"`
-if [ "" != "$process"  ]
+if [[ "" != "$process"  ]]
 then
     pid=`echo $process | cut -d ' ' -f 2`
     kill -9 $pid > /dev/null 2>&1
