@@ -22,9 +22,21 @@ describe('Test Epics view.', function(){
                 done();
             });
         });
-        it('should have a table with all headers', function(done) {
+        it('should have a table', function(done) {
             client.isVisible('table', function(err,resp) {
                 assert.isTrue(resp);
+                done();
+            });
+        });
+        it('should have a valid summary', function(done) {
+            client.getText('.summary', function(err,resp) {
+                expect(resp).to.match(/^[a-zA-Z\d]+$/);
+                done();
+            });
+        });
+        it('should have a valid image', function(done) {
+            client.getAttribute('.image img', 'src', function(err,resp) {
+                expect(resp).to.match(/\/web\/img\/[0-9]+\.png$/);
                 done();
             });
         });
