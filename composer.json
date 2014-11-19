@@ -16,7 +16,8 @@
     },
     "autoload": {
         "psr-4": {
-            "JiraDashboard\\": "src/"
+            "JiraDashboard\\": "src/",
+            "JiraDashboard\\Tests\\": ["tests/integration/cases"]
         }
     }
 }

@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\Behat\Gherkin\Filter\LineRangeFilterTest;
 use JiraDashboard\Utils\DateFormatter;
-use JiraDashboard\Daos\IssuesRestApiDao;
 
 class EpicsController
 {
@@ -26,11 +25,7 @@ class EpicsController
     private function setUp(Application $app)
     {
         $this->config = $app['config']->fetch();
-
-        $this->dao = new IssuesRestApiDao(
-            $this->config['jira_api']['endpoint'],
-            $this->config['jira_api']['token']
-        );
+        $this->dao = $app['dao'];
 
         foreach ($this->config['epics']['fields'] as $field => $properties) {
             if ($field === 'delayed') continue;
@@ -274,6 +269,10 @@ class EpicsController
      */
     private function getListFromMap()
     {
+        if (empty($this->orderedIssuesMap)) {
+            return array();
+        }
+
         $issues = array();
 
         foreach ($this->orderedIssuesMap as $type => $byStateIssues) {
@@ -302,7 +301,9 @@ class EpicsController
                         if (empty($this->orderedIssuesMap[$type][$team])) 
                             unset($this->orderedIssuesMap[$type][$team]);
                     }
-                    $issues[count($issues) - 1]['separation'] = true;
+                    if (count($issues)) {
+                        $issues[count($issues) - 1]['separation'] = true;
+                    }
                 }
             }
         }

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="Jira Dashboard" default="build" basedir="../../">
-    <target name="build" depends="prepare,lint,phploc,phpmd,phpcs,phpcpd"/>
+<project name="IncidentMgr" default="build" basedir="../../">
+    <target name="build" depends="prepare,lint,phploc,phpmd,phpcs,phpcpd,unit-tests"/>
+    <target name="tests" depends="prepare,unit-tests,functional-tests"/>
 
     <property name="codebase" value="" />
 
@@ -81,8 +82,8 @@
         </exec>
     </target>
 
-    <!-- PHPUnit integration -->
-    <target name="integration-tests" description="Run integration tests with PHPUnit">
+    <!-- PHP Unit -->
+    <target name="unit-tests" description="Run tests with PHPUnit">
         <exec executable="phpunit" failonerror="true">
             <arg value="-c"/>
             <arg path="${basedir}"/>
@@ -90,6 +91,14 @@
             <arg path="${basedir}/build/ci/logs/tests/"/>
             <arg value="--coverage-clover"/>
             <arg path="${basedir}/build/ci/logs/tests/clover.xml"/>
+        </exec>
+    </target>
+
+    <!-- Functional tests with Behat -->
+    <target name="functional-tests" description="Run functional tests with Behat">
+        <exec dir="${basedir}"
+              executable="behat" failonerror="true">
+            <arg value="--ansi"/>
         </exec>
     </target>
 </project>
