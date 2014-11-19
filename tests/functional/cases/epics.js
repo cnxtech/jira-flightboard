@@ -30,7 +30,7 @@ describe('Test Epics view.', function(){
         });
         it('should have a valid summary', function(done) {
             client.getText('.summary', function(err,resp) {
-                expect(resp).to.match(/^[a-zA-Z\d]+$/);
+                expect(resp).to.match(/^[a-zA-Z\d\-\s]+$/);
                 done();
             });
         });
