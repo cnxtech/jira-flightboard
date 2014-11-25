@@ -1,11 +1,11 @@
 root_point: "/jira-dashboard"
 
 jira_api:
-  token: YXV0by5ib3Q6NHJVanVxVTVyVXRyMmJyYURyZXQ3dXNVZ3VGVXBIYWs=
-  endpoint: https://jira.shazamteam.net/rest/api/2/
+  token: a8fgsd8f7ga8sawhfuwbg8berg8abegr87bae
+  endpoint: https://jira.yourdomain.net/rest/api/2/
 
 epics:
-  project: "Shazam Road Map"
+  project: "Epics Project Name"
   status:
     - "In Progress"
     - "Closed"
@@ -84,72 +84,17 @@ epics:
         since: false
         states_color: blue
 
-incidents:
-  project: "Incident Management"
-  priorities:
-    - Critical
-    - Major
-    - Minor
-
 smell_levels:
   1: 3600 # 1 hour
   2: 86400 # 1 day
 
 teams:
   iOS Team:
-    key: SIO
-    id: 10150
+    key: IOS
+    id: 12345
   Android Team:
-    key: SOA
-    id: 10201
-  AMP:
-    key: AMP
-    id: 10054
-  AMP News:
-    key: NWS
-    id: 10011
-  Data Team:
-    key: DEN
-    id: 10241
+    key: AND
+    id: 12346
   Web Team:
-    key: WPS
-    id: 10032
-  Server Team:
-    key: AMP
-    id: 10054
-  Ingestion Team:
-    key: DMT
-    id: 10063
-  Experiences Team:
-    key: TVT
-    id: 10051
-  Recognition Infrastructure:
-    key: RIN
-    id: 10951
-  Recognition Algorithm:
-    key: RAD
-    id: 11453
-  Shazam Connect:
-    key: SSP
-    id: 10242
-  Infrastructure Ops:
-    key: OPS
-    id: 10070
-  DBA Team:
-    key: OPS
-    id: 10070
-  SE - YellowTeam:
-    key: SE
-    id: 11352
-  Service Engineering:
-    key: SE
-    id: 11352
-  Experiences Services:
-    key: TVT
-    id: 10051
-  Infra Tools:
-    key: ITL
-    id: 10211
-  IT Ops:
-    key: OPS
-    id: 10070
+    key: WEB
+    id: 12347
