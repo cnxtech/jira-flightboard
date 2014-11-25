@@ -45,7 +45,7 @@ class EpicsControllerTest extends PHPUnit_Framework_TestCase
         $this->controller = new EpicsController();
     }
 
-    public function testDummy()
+    public function testGetEpics()
     {
         $checkTemplateParams = function($templateParams) {
             $expected = require(__DIR__ . '/../expected.php');
@@ -68,7 +68,7 @@ class EpicsControllerTest extends PHPUnit_Framework_TestCase
             )
             ->will($this->returnValue($issuesFromJira));
 
-        $request = new Request(array(), array('start' => 5, 'end' => 10));
+        $request = new Request(array(), array('start' => 1, 'end' => 10));
         $response = $this->controller->get($request, $this->app);
 
         $this->assertSame('a response', $response);
