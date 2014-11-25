@@ -12,7 +12,7 @@ use JiraDashboard\Controllers\EpicsController;
 use PHPUnit_Framework_TestCase;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Common\Config;
+use EasyConfig\Config;
 
 class EpicsControllerTest extends PHPUnit_Framework_TestCase
 {

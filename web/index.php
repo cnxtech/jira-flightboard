@@ -1,7 +1,7 @@
 <?php
 
 use Silex\Application;
-use Common\Config;
+use EasyConfig\Config;
 use Symfony\Component\HttpFoundation\Request;
 use Silex\Provider\TwigServiceProvider;
 use JiraDashboard\Daos\IssuesRestApiDao;
