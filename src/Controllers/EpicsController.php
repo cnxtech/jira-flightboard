@@ -22,8 +22,6 @@ namespace JiraDashboard\Controllers;
 use Exception;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Tests\Behat\Gherkin\Filter\LineRangeFilterTest;
 use JiraDashboard\Utils\DateFormatter;
 
 class EpicsController
