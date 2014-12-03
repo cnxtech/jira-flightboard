@@ -98,7 +98,7 @@ class EpicsController
         foreach ($fields as $field => $properties) {
             if ($field === 'delayed') continue;
 
-            $this->states = $this->setFieldPropertiesFromConfigFile($field, $properties);
+            $this->states = $this->setFieldProperties($field, $properties);
         }
     }
 
@@ -312,7 +312,7 @@ class EpicsController
      * @param $state
      * @return array
      */
-    private function setResolutionsFromConfigFile($resolutions, $field, $state)
+    private function setResolutions($resolutions, $field, $state)
     {
         $resolutionsArray = is_array($resolutions) ? $resolutions : array($resolutions);
 
@@ -328,7 +328,7 @@ class EpicsController
      * @param $properties
      * @return array
      */
-    private function setFieldPropertiesFromConfigFile($field, $properties)
+    private function setFieldProperties($field, $properties)
     {
         $states = isset($properties['states']) ? $properties['states'] : 'default';
 
@@ -341,7 +341,7 @@ class EpicsController
             }
 
             if (isset($properties['resolution'])) {
-                $this->states[$state] = $this->setResolutionsFromConfigFile($properties['resolution'], $field, $state);
+                $this->states[$state] = $this->setResolutions($properties['resolution'], $field, $state);
             } else {
                 $this->states[$state][] = $field;
             }
