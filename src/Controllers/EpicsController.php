@@ -93,7 +93,9 @@ class EpicsController
         $this->config = $app['config']->fetch();
         $this->dao = $app['dao'];
 
-        foreach ($this->config['epics']['fields'] as $field => $properties) {
+        $fields = $this->config['epics']['fields'];
+
+        foreach ($fields as $field => $properties) {
             if ($field === 'delayed') continue;
 
             $this->states = $this->setFieldPropertiesFromConfigFile($field, $properties);
