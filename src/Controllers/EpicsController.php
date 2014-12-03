@@ -90,8 +90,9 @@ class EpicsController
 
     private function initialise(Application $app)
     {
-        $this->config = $app['config']->fetch();
         $this->dao = $app['dao'];
+
+        $this->config = $app['config']->fetch();
 
         $fields = $this->config['epics']['fields'];
 
