@@ -29,38 +29,8 @@ class EpicsController
     private $dao;
     private $config;
     private $orderedIssuesMap;
-    private $sttaes = array();
+    private $states = array();
     private $summaries;
-
-    private function setUp(Application $app)
-    {
-        $this->config = $app['config']->fetch();
-        $this->dao = $app['dao'];
-
-        foreach ($this->config['epics']['fields'] as $field => $properties) {
-            if ($field === 'delayed') continue;
-
-            $statusKey = isset($properties['states']) ? $properties['states'] : 'default';
-
-            $states = is_array($statusKey) ? $statusKey : array($statusKey);
-            foreach ($states as $state) {
-                if (!isset($this->states[$state])) {
-                    $this->states[$state] = array();
-                }
-
-                if (isset($properties['resolution'])) {
-                    $resolutions = is_array($properties['resolution'])
-                        ? $properties['resolution']
-                        : array($properties['resolution']);
-                    foreach ($resolutions as $resolution) {
-                        $this->states[$state][$resolution] = $field;
-                    }
-                } else {
-                    $this->states[$state][] = $field;
-                }
-            }
-        }
-    }
 
     /**
      * @param Request $request
@@ -69,7 +39,8 @@ class EpicsController
      */
     public function get(Request $request, Application $app)
     {
-        $this->setUp($app);
+        $this->initialise($app);
+
         $start = $request->get('start', 1);
         $end = $request->get('end');
 
@@ -115,6 +86,21 @@ class EpicsController
             : array_slice($issueListGrouped, $start - 1, $end - $start + 1);
 
         return $app['twig']->render('epics.twig', array('issues' => $issueListSlice));
+    }
+
+    private function initialise(Application $app)
+    {
+        $this->dao = $app['dao'];
+
+        $this->config = $app['config']->fetch();
+
+        $fields = $this->config['epics']['fields'];
+
+        foreach ($fields as $field => $properties) {
+            if ($field === 'delayed') continue;
+
+            $this->states = $this->setFieldProperties($field, $properties);
+        }
     }
 
     /**
@@ -319,5 +305,49 @@ class EpicsController
         }
 
         return $issues;
+    }
+
+    /**
+     * @param $resolutions
+     * @param $field
+     * @param $state
+     * @return array
+     */
+    private function setResolutions($resolutions, $field, $state)
+    {
+        $resolutionsArray = is_array($resolutions) ? $resolutions : array($resolutions);
+
+        foreach ($resolutionsArray as $resolution) {
+            $this->states[$state][$resolution] = $field;
+        }
+
+        return $this->states[$state]; //This can be refactored into a local variable
+    }
+
+    /**
+     * @param $field
+     * @param $properties
+     * @return array
+     */
+    private function setFieldProperties($field, $properties)
+    {
+        $states = isset($properties['states']) ? $properties['states'] : 'default';
+
+        $statesArray = is_array($states) ? $states : array($states);
+
+        foreach ($statesArray as $state) {
+            //Since this is not static, will it ever be set here?
+            if (!isset($this->states[$state])) {
+                $this->states[$state] = array();
+            }
+
+            if (isset($properties['resolution'])) {
+                $this->states[$state] = $this->setResolutions($properties['resolution'], $field, $state);
+            } else {
+                $this->states[$state][] = $field;
+            }
+        }
+
+        return $this->states; //This can be refactored into a local variable
     }
 }
