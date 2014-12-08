@@ -23,7 +23,7 @@
                 <td>Status</td>
             </tr>
         {% for issue in issues %}
-            <tr {% if issue.separation is defined %} class="separation"{% endif %}>
+            <tr {% if issue.separation %} class="separation"{% endif %}>
                 <td class="image"><img src="./web/img/{{ issue.icon }}.png"/></td>
                 <td>{{ issue.scheduled }}</td>
                 <td><div class="summary">{{ issue.summary }}</div></td>
