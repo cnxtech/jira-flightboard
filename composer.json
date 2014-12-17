@@ -1,7 +1,7 @@
 {
     "name": "shazam/jira-flightboard",
     "description": "Represents a flightboard as a flight board showing tickets from Jira.",
-    "type": "web service",
+    "type": "webservice",
     "license": "Apache-2.0",
     "require": {
         "silex/silex": "~1.1",
