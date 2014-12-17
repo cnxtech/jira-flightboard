@@ -1,0 +1,21 @@
+{
+    "name": "shazam/jira-flightboard",
+    "description": "Represents a flightboard as a flight board showing tickets from Jira.",
+    "type": "web service",
+    "license": "Apache-2.0",
+    "require": {
+        "silex/silex": "~1.1",
+        "twig/twig": "1.15.*@dev",
+        "shazam/easy-config": "0.1.1",
+        "behat/behat": "3.0.14",
+        "behat/mink-extension": "2.0.1",
+        "behat/mink-goutte-driver": "1.1.0",
+        "behat/mink-selenium2-driver": "1.2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "JiraFlightboard\\": "src/",
+            "JiraFlightboard\\Tests\\": ["tests/integration/cases"]
+        }
+    }
+}
