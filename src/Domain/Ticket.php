@@ -13,13 +13,13 @@
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific 
  * language governing permissions and limitations under the License.
  *
- * @package JiraDashboard\Domain
+ * @package JiraFlightboard\Domain
  * @author toni <toni.lopez@shazam.com>
  */
 
-namespace JiraDashboard\Domain;
+namespace JiraFlightboard\Domain;
 
-use JiraDashboard\Utils\DateFormatter;
+use JiraFlightboard\Utils\DateFormatter;
 
 class Ticket
 {

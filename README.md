@@ -1,4 +1,4 @@
-# Jira Dashboard
+# Jira Flightboard
 Web Service that displays Jira tickets as in a Flight Board.
 Tickets are filtered and ordered based on a configuration file.
 
@@ -21,4 +21,4 @@ In *web/img/* you have to include the icons for each of the teams/components. Th
 Usage
 ------------
 After installing the rpm package, editing the config/properties.yml file and adding your icons, you are ready.
-Just access to *http://127.0.0.1/jira-dashboard/epics*.
+Just access to *http://127.0.0.1/jira-flightboard/epics*.

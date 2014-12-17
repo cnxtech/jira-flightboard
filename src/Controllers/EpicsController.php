@@ -13,17 +13,17 @@
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific 
  * language governing permissions and limitations under the License.
  *
- * @package JiraDashboard\Controllers
+ * @package JiraFlightboard\Controllers
  * @author toni <toni.lopez@shazam.com>
  */
 
-namespace JiraDashboard\Controllers;
+namespace JiraFlightboard\Controllers;
 
 use Exception;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use JiraDashboard\Domain\Ticket;
-use JiraDashboard\Domain\TicketMap;
+use JiraFlightboard\Domain\Ticket;
+use JiraFlightboard\Domain\TicketMap;
 
 class EpicsController
 {

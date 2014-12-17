@@ -13,14 +13,14 @@
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific 
  * language governing permissions and limitations under the License.
  *
- * @package JiraDashboard\Tests\Controllers
+ * @package JiraFlightboard\Tests\Controllers
  * @author toni <toni.lopez@shazam.com>
  */
 
-namespace JiraDashboard\Tests\Controllers;
+namespace JiraFlightboard\Tests\Controllers;
 
-use JiraDashboard\Tests;
-use JiraDashboard\Controllers\EpicsController;
+use JiraFlightboard\Tests;
+use JiraFlightboard\Controllers\EpicsController;
 use PHPUnit_Framework_TestCase;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,7 +40,7 @@ class EpicsControllerTest extends PHPUnit_Framework_TestCase
         $this->app['config'] = Config::getInstance();
         $this->app['config']->loadConfig(array(__DIR__ . '/../..//../config/properties.yml'));
 
-        $this->app['dao'] = $this->getMock('\JiraDashboard\Daos\IssuesRestApiDao', array(), array(), '', false);
+        $this->app['dao'] = $this->getMock('\JiraFlightboard\Daos\IssuesRestApiDao', array(), array(), '', false);
 
         $this->controller = new EpicsController();
     }

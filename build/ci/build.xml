@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="Jira Dashboard" default="build" basedir="../../">
+<project name="Jira Flightboard" default="build" basedir="../../">
     <target name="build" depends="prepare,lint,phploc,phpmd,phpcs,phpcpd"/>
 
     <property name="codebase" value="" />

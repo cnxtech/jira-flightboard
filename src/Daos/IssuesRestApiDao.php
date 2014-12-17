@@ -13,11 +13,11 @@
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific 
  * language governing permissions and limitations under the License.
  *
- * @package JiraDashboard\Daos
+ * @package JiraFlightboard\Daos
  * @author toni <toni.lopez@shazam.com>
  */
 
-namespace JiraDashboard\Daos;
+namespace JiraFlightboard\Daos;
 
 class IssuesRestApiDao
 {

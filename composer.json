@@ -1,7 +1,7 @@
 {
-    "name": "shazam/jira-dashboard",
-    "description": "Represents a dashboard as a flight board showing tickets from Jira.",
-    "type": "web service",
+    "name": "shazam/jira-flightboard",
+    "description": "Represents a flightboard as a flight board showing tickets from Jira.",
+    "type": "webservice",
     "license": "Apache-2.0",
     "require": {
         "silex/silex": "~1.1",
@@ -14,8 +14,8 @@
     },
     "autoload": {
         "psr-4": {
-            "JiraDashboard\\": "src/",
-            "JiraDashboard\\Tests\\": ["tests/integration/cases"]
+            "JiraFlightboard\\": "src/",
+            "JiraFlightboard\\Tests\\": ["tests/integration/cases"]
         }
     }
 }

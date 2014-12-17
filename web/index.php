@@ -20,7 +20,7 @@ use Silex\Application;
 use EasyConfig\Config;
 use Symfony\Component\HttpFoundation\Request;
 use Silex\Provider\TwigServiceProvider;
-use JiraDashboard\Daos\IssuesRestApiDao;
+use JiraFlightboard\Daos\IssuesRestApiDao;
 
 ini_set('date.timezone', 'Europe/London');
 
@@ -44,7 +44,7 @@ $app['dao'] = new IssuesRestApiDao(
 );
 
 $controllerFactory = $app['controllers_factory'];
-$controllerFactory->get('epics', '\JiraDashboard\Controllers\EpicsController::get');
+$controllerFactory->get('epics', '\JiraFlightboard\Controllers\EpicsController::get');
 $app->mount($rootPoint, $controllerFactory);
 
 $app->run();

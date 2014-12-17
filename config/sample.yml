@@ -1,4 +1,4 @@
-root_point: "/jira-dashboard"
+root_point: "/jira-flightboard"
 
 jira_api:
   token: a8fgsd8f7ga8sawhfuwbg8berg8abegr87bae
