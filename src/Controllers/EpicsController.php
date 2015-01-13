@@ -49,7 +49,7 @@ class EpicsController
             $rawIssues = $this->getRawIssuesFromJira();
         } catch (Exception $e) {
             //ERROR, What is this $app, I have no idea...
-            return $app->json(array('error' => 'Could not get issues from Jira.'));
+            return $app->json(array('error' => 'Could not get issues from Jira.'), 500);
         }
 
         $this->map = new TicketMap($this->config);
