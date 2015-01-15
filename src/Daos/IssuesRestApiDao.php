@@ -19,6 +19,9 @@
 
 namespace JiraFlightboard\Daos;
 
+use Exception;
+use Monolog\Logger;
+
 class IssuesRestApiDao
 {
     /**
@@ -32,13 +35,20 @@ class IssuesRestApiDao
     private $authenticationToken;
 
     /**
+     * @param Logger
+     */
+    private $logger;
+
+    /**
      * @param string $baseUrl
      * @param string|null $authenticationToken
+     * @param Logger $logger
      */
-    public function __construct($baseUrl, $authenticationToken = null)
+    public function __construct($baseUrl, $authenticationToken = null, Logger $logger)
     {
         $this->baseUrl = $baseUrl;
         $this->authenticationToken = $authenticationToken;
+        $this->logger = $logger;
     }
 
     /**
@@ -67,7 +77,8 @@ class IssuesRestApiDao
 
         $responseArray = json_decode($responseJson, true);
         if (200 != $httpStatus || $responseArray === null) {
-            throw new \Exception();
+            $this->logger->error('Error getting issues from jira: ' . $responseJson);
+            throw new Exception();
         }
 
         return $responseArray;

@@ -20,6 +20,8 @@
 use EasyConfig\Config;
 use JiraFlightboard\Daos\IssuesRestApiDao;
 use JiraFlightboard\Controllers\EpicsController;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 ini_set('date.timezone', 'Europe/London');
 
@@ -29,11 +31,15 @@ $config = Config::getInstance();
 $config->setUseCache(true);
 $config->loadConfig(array(__DIR__ . '/../config/properties.yml'));
 
+$log = new Logger('Jira-Flightboard');
+$log->pushHandler(new StreamHandler($config->fetch('log', 'file'), Logger::WARNING));
+
 $rootPoint = $config->fetch('root_point');
 
 $dao = new IssuesRestApiDao(
     $config->fetch('jira_api', 'endpoint'),
-    $config->fetch('jira_api', 'token')
+    $config->fetch('jira_api', 'token'),
+    $log
 );
 
 $epicsDao = new EpicsController();

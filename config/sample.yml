@@ -1,5 +1,8 @@
 root_point: "/jira-flightboard"
 
+log:
+  file: /var/log/jira-flightboard.log
+
 jira_api:
   token: a8fgsd8f7ga8sawhfuwbg8berg8abegr87bae
   endpoint: https://jira.yourdomain.net/rest/api/2/
