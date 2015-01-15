@@ -140,12 +140,12 @@ class TicketMap
             $jiraSummary = trim($ticket->summary);
 
             if (!isset($summaries[$jiraSummary])) {
-                $groupedList[] = $ticket;
+                $groupedList[] = get_object_vars($ticket);
                 $summaries[$jiraSummary] = count($groupedList) - 1;
             } else {
                 $newIndex = $summaries[$jiraSummary];
                 $head = array_slice($groupedList, 0, $newIndex + 1);
-                $head[] = $ticket;
+                $head[] = get_object_vars($ticket);
                 for ($i = $newIndex + 1; $i < count($groupedList); $i++) {
                     $head[] = $groupedList[$i];
                 }

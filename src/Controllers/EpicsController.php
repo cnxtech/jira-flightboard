@@ -20,10 +20,12 @@
 namespace JiraFlightboard\Controllers;
 
 use Exception;
+use EasyConfig\Config;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use JiraFlightboard\Domain\Ticket;
 use JiraFlightboard\Domain\TicketMap;
+use JiraFlightboard\Daos\IssuesRestApiDao;
 
 class EpicsController
 {
@@ -32,25 +34,17 @@ class EpicsController
     private $ticketMap;
     private $states = array();
     private $summaries;
+    private $cache = '/../../data/cache';
 
     /**
-     * @param Request $request
-     * @param Application $app
-     * @return string
+     * @param Config $config
+     * @param IssuesRestApiDao $dao
      */
-    public function get(Request $request, Application $app)
+    public function sync(Config $config, IssuesRestApiDao $dao)
     {
-        $this->initialise($app);
+        $this->initialise($config, $dao);
 
-        $start = $request->get('start', 1);
-        $end = $request->get('end');
-
-        try {
-            $rawIssues = $this->getRawIssuesFromJira();
-        } catch (Exception $e) {
-            //ERROR, What is this $app, I have no idea...
-            return $app->json(array('error' => 'Could not get issues from Jira.'), 500);
-        }
+        $rawIssues = $this->getRawIssuesFromJira();
 
         $this->map = new TicketMap($this->config);
 
@@ -67,6 +61,21 @@ class EpicsController
 
         $list = $this->map->getList();
 
+        file_put_contents(__DIR__ . $this->cache, json_encode($list));
+    }
+
+    /**
+     * @param Request $request
+     * @param Application $app
+     * @return string
+     */
+    public function get(Request $request, Application $app)
+    {
+        $start = $request->get('start', 1);
+        $end = $request->get('end');
+
+        $list = json_decode(file_get_contents(__DIR__ . $this->cache), true);
+
         $listSlice = $end === null
             ? array_slice($list, $start - 1)
             : array_slice($list, $start - 1, $end - $start + 1);
@@ -75,13 +84,14 @@ class EpicsController
     }
 
     /**
-     * @param Application $app
+     * @param Config $config
+     * @param IssuesRestApiDao $dao
      */
-    private function initialise(Application $app)
+    private function initialise(Config $config, IssuesRestApiDao $dao)
     {
-        $this->dao = $app['dao'];
+        $this->dao = $dao;
 
-        $this->config = $app['config']->fetch();
+        $this->config = $config->fetch();
 
         $fields = $this->config['epics']['fields'];
 

@@ -54,29 +54,16 @@ class EpicsControllerTest extends PHPUnit_Framework_TestCase
             $expected2 = $expected['issues'][1];
             $ticket1 = $templateParams['issues'][0];
             $ticket2 = $templateParams['issues'][1];
-        
-            return $expected1['key'] == $ticket1->key
-                && $expected1['scheduled'] == $ticket1->scheduled
-                && $expected1['summary'] == $ticket1->summary
-                && $expected1['project'] == $ticket1->project
-                && $expected1['icon'] == $ticket1->icon
-                && $expected1['blocking'] == $ticket1->blocking
-                && $expected1['rank'] == $ticket1->rank
-                && $expected1['month'] == $ticket1->month
-                && $expected1['component'] == $ticket1->component
-                && $expected1['status'] == $ticket1->status
-                && $expected1['styles'] == $ticket1->styles
-                && $expected2['key'] == $ticket2->key
-                && $expected2['scheduled'] == $ticket2->scheduled
-                && $expected2['summary'] == $ticket2->summary
-                && $expected2['project'] == $ticket2->project
-                && $expected2['icon'] == $ticket2->icon
-                && $expected2['blocking'] == $ticket2->blocking
-                && $expected2['rank'] == $ticket2->rank
-                && $expected2['month'] == $ticket2->month
-                && $expected2['component'] == $ticket2->component
-                && $expected2['status'] == $ticket2->status
-                && $expected2['styles'] == $ticket2->styles;
+            $expected1['created'] = $ticket1['created'];
+            $expected2['created'] = $ticket2['created'];
+            $expected1['separation'] = $ticket1['separation'];
+            $expected2['separation'] = $ticket2['separation'];
+            $expected1['changelog'] = $ticket1['changelog'];
+            $expected2['changelog'] = $ticket2['changelog'];
+            $expected1['jiraStatus'] = $ticket1['jiraStatus'];
+            $expected2['jiraStatus'] = $ticket2['jiraStatus'];
+
+            return $expected1 == $ticket1 && $expected2 == $ticket2;
         };
 
         $this->app['twig']
@@ -96,6 +83,7 @@ class EpicsControllerTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue($issuesFromJira));
 
         $request = new Request(array(), array('start' => 1, 'end' => 10));
+        $this->controller->sync($this->app['config'], $this->app['dao']);
         $response = $this->controller->get($request, $this->app);
 
         $this->assertSame('a response', $response);
