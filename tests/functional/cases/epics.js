@@ -32,12 +32,6 @@ describe('Test Epics view.', function(){
                 done();
             });
         });
-        it('should have last time loaded', function(done) {
-            client.getText('.last_time', function(err,text) {
-                expect(text).to.match(/^Last update: \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
-                done();
-            });
-        });
         it('should have a table', function(done) {
             client.isVisible('table', function(err,resp) {
                 assert.isTrue(resp);
