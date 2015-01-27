@@ -62,6 +62,8 @@ class EpicsControllerTest extends PHPUnit_Framework_TestCase
             $expected2['changelog'] = $ticket2['changelog'];
             $expected1['jiraStatus'] = $ticket1['jiraStatus'];
             $expected2['jiraStatus'] = $ticket2['jiraStatus'];
+            $expected1['priority'] = $ticket1['priority'];
+            $expected2['priority'] = $ticket2['priority'];
 
             return $expected1 == $ticket1 && $expected2 == $ticket2;
         };

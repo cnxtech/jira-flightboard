@@ -42,8 +42,8 @@ class TicketMap
 
         foreach ($this->config['epics']['fields'] as $field => $properties) {
             if ($properties['sorting'] == 'time') {
-                $this->map[$field] = array();;
-            } else if ($properties['sorting'] == 'team-group') {
+                $this->map[$field] = array();
+            } else if ($properties['sorting'] == 'team-group' || $properties['sorting'] == 'board') {
                 $this->map[$field] = $teams;
             }
         }
@@ -59,6 +59,7 @@ class TicketMap
         $component = $ticket->component;
         $month = $ticket->month;
         $rank = $ticket->rank;
+        $priority = $ticket->priority;
 
         $sorting = $this->config['epics']['fields'][$status]['sorting'];
 
@@ -77,6 +78,17 @@ class TicketMap
                 $this->map[$status][$component][$month][$rank] = array();
 
             $this->map[$status][$component][$month][$rank][] = $ticket;
+        } else if ($sorting === 'board') {
+            if (!isset($this->map[$status][$component][$month])) {
+                $this->map[$status][$component][$month] = array();
+                ksort($this->map[$status][$component]);
+            }
+            if (!isset($this->map[$status][$component][$month][$priority])) {
+                $this->map[$status][$component][$month][$priority] = array();
+                ksort($this->map[$status][$component][$month]);
+            }
+
+            $this->map[$status][$component][$month][$priority][] = $ticket;
         }
     }
 
@@ -98,6 +110,16 @@ class TicketMap
                     if ($this->config['epics']['fields'][$type]['sorting'] == 'time')
                         foreach ($group as $issue)
                             $list[] = $issue;
+            } else if ($this->config['epics']['fields'][$type]['sorting'] == 'board') {
+                foreach (array_keys($this->map[$type]) as $team) {
+                    foreach (array_keys($this->map[$type][$team]) as $month) {
+                        ksort($this->map[$type][$team][$month]);
+                        foreach (array_keys($this->map[$type][$team][$month]) as $rank) {
+                            ksort($this->map[$type][$team][$month][$rank]);
+                            $list = array_merge($list, $this->map[$type][$team][$month][$rank]);
+                        }
+                    }
+                }
             } else {
                 while (!empty($this->map[$type])) {
                     foreach (array_keys($this->map[$type]) as $team) {

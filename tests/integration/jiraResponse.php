@@ -26,6 +26,7 @@ return array (
     array(
         'key' => 'ABC-123',
         'fields' => array(
+          'priority' => array('id' => 1),
           'summary' => 'the summary of the ticket',
           'versions' => array(array('name' => 'month-where-scheduled')),
           'components' => array(
@@ -41,6 +42,7 @@ return array (
     array(
         'key' => 'ABC-456',
         'fields' => array(
+          'priority' => array('id' => 1),
           'summary' => 'the summary of the second ticket',
           'versions' => array(array('name' => 'month-where-scheduled_2')),
           'components' => array(

@@ -64,6 +64,7 @@ class Ticket
         $this->changelog = $ticketFromJira['changelog'];
         $this->created = $fields['created'];
         $this->since = $this->created;
+        $this->priority = $fields['priority']['id'];
 
         // get status
         $stateKey = isset($states[$this->jiraStatus]) ? $this->jiraStatus : 'default';
