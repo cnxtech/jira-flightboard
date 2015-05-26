@@ -92,18 +92,27 @@ class IssuesRestApiDao
      */
     public function getByStatus($project, array $status)
     {
+        $issues = array();
+        $start = 0;
+
         foreach ($status as $key => $element) {
             $status[$key] = "status='$element'";
         }
         $status = implode(' or ', $status);
 
-        $query = sprintf(
-            'search?jql=project="%s" and (%s) &maxResults=-1&expand=changelog',
-            $project,
-            $status
-        );
-        $query = str_replace(' ', '+', $query);
+        do {
+            $query = sprintf(
+                'search?jql=project="%s" and (%s) &limit=50&startAt=%d&expand=changelog',
+                $project,
+                $status,
+                $start
+            );
+            $query = str_replace(' ', '+', $query);
+            $response = $this->query($query);
+            $issues = array_merge($issues, $response['issues']);
+            $start += 50;
+        } while (count($response['issues']));
 
-        return $this->query($query);
+        return $issues;
     }
 }

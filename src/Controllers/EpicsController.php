@@ -48,7 +48,7 @@ class EpicsController
 
         $this->map = new TicketMap($this->config);
 
-        foreach ($rawIssues['issues'] as $rawIssue) {
+        foreach ($rawIssues as $rawIssue) {
             $ticket = new Ticket($rawIssue, $this->config['teams'], $this->states);
 
             $config = $this->config['epics']['fields'][$ticket->status];
