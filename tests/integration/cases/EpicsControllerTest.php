@@ -80,9 +80,9 @@ class EpicsControllerTest extends PHPUnit_Framework_TestCase
             ->method('getByStatus')
             ->with(
                 'Shazam Road Map',
-                array('In Progress', 'Closed', 'Open', 'Resolved', date('F'), date('F', strtotime('+1 month')))
+                array('In Progress', 'Closed', 'Open', 'Resolved', 'In Testing', date('F'), date('F', strtotime('+1 month')))
             )
-            ->will($this->returnValue($issuesFromJira));
+            ->will($this->returnValue($issuesFromJira['issues']));
 
         $request = new Request(array(), array('start' => 1, 'end' => 10));
         $this->controller->sync($this->app['config'], $this->app['dao']);
