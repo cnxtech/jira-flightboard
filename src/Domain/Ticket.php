@@ -127,7 +127,7 @@ class Ticket
 
             $this->styles['status'] = $displayConfig['states_color'] === 'time'
                 ? $timeColor($this->since, $displayConfig['time'])
-                : $displayConfig['states_caolor'];
+                : $displayConfig['states_color'];
 
             if (isset($displayConfig['time_color'])) {
                 $this->styles['time'] = $displayConfig['time_color'] === 'time'
