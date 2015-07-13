@@ -144,7 +144,8 @@ class Ticket
      */
     public function shouldBeIncluded(array $config)
     {
-        return !isset($config['limit']) || strtotime($config['limit']) <= strtotime($this->since);
+        return empty($this->project)
+            || !isset($config['limit']) || strtotime($config['limit']) <= strtotime($this->since);
     }
 
     /**
